@@ -17,7 +17,7 @@ services:
     depends_on: 
       - cuidar_db
     ports:
-      - "3000:3030"
+      - "3030:3030"
     env_file: 
       - .env
     environment:
@@ -35,10 +35,10 @@ services:
       GMAIL_PASSWORD: ${GMAIL_PASSWORD}
       EMAIL_PORT: 587
       EMAIL_SMTP_HOST: smtp.example.com
-    command: ./wait-for.sh db:5432 -- npm run start
+    command: npm run start
 
   cuidar_db:
-    image: postgres:9.6
+    image: postgres
     container_name: 'cuidar_db'
     restart: unless-stopped
     volumes:
@@ -48,15 +48,16 @@ services:
       - .env
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USERNAME: postgres
       POSTGRES_DB: Cuidar
     ports:
-      - "5432:5433"
+      - "5432:5432"
     networks: 
       - backend
 
   pg-admin:
     image: dpage/pgadmin4
-    container_name: 'pgadmin4'
+    container_name: 'pgadmin4_cuidar'
     restart: unless-stopped
     depends_on: 
       - cuidar_db

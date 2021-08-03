@@ -9,5 +9,4 @@ sequelize
   })
   .catch((err) => {
     LogService.error(`error: ${err}`);
-  })
-  .done();
+  });
