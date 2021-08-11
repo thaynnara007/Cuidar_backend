@@ -15,7 +15,7 @@ const app = express();
 // Middlewares
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(morgan('tiny'));
+app.use(morgan('dev'));
 
 // Routes
 app.use('/', routes);
