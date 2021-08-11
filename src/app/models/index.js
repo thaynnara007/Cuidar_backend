@@ -5,13 +5,13 @@ const filesystem = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 
-const { env } = require('../../config/database');
-const config = require('../../config/database')[env];
+const { ENVIRONMENT } = require('../../config/environment');
+const config = require('../../config/database')[ENVIRONMENT];
 
 const database = {};
 
 let sequelize;
-if (env === 'production') {
+if (ENVIRONMENT === 'production') {
   sequelize = new Sequelize(config.database_url, config);
 } else {
   sequelize = new Sequelize(
