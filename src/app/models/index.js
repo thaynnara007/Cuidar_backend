@@ -2,25 +2,22 @@ const filesystem = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 
-const config = require('../../config/database');
+const { env } = require('../../config/database');
+const config = require('../../config/database')[env];
 
 const database = {};
 
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  {
-    host: config.host,
-    dialect: 'postgres',
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000,
-    },
-  },
-);
+let sequelize;
+if (env === 'production') {
+  sequelize = new Sequelize(config.database_url, config);
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config,
+  );
+}
 
 filesystem
   .readdirSync(__dirname)
