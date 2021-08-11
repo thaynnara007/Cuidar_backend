@@ -1,14 +1,17 @@
+/* eslint-disable import/no-dynamic-require */
+/* eslint-disable global-require */
+
 const filesystem = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 
-const { env } = require('../../config/database');
-const config = require('../../config/database')[env];
+const { ENVIRONMENT } = require('../../config/environment');
+const config = require('../../config/database')[ENVIRONMENT];
 
 const database = {};
 
 let sequelize;
-if (env === 'production') {
+if (ENVIRONMENT === 'production') {
   sequelize = new Sequelize(config.database_url, config);
 } else {
   sequelize = new Sequelize(
@@ -27,7 +30,10 @@ filesystem
       && file.slice(-3) === '.js',
   )
   .forEach((file) => {
-    const model = sequelize.import(path.join(__dirname, file));
+    const model = require(path.join(__dirname, file))(
+      sequelize,
+      Sequelize.DataTypes,
+    );
     database[model.name] = model;
   });
 
