@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Role = sequelize.define(
-    'Role',
+  const Permission = sequelize.define(
+    'Permission',
     {
       name: {
         type: DataTypes.STRING,
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {},
   );
-  Role.associate = () => {};
+  Permission.associate = () => {};
 
-  return Role;
+  return Permission;
 };
