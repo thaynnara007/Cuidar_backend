@@ -10,7 +10,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {},
   );
-  Permission.associate = () => {};
+  Permission.associate = (models) => {
+    Permission.belongsToMany(models.User, {
+      through: 'UserPermissions',
+      as: 'users',
+      foreignKey: 'permissionId',
+      onDelete: 'CASCADE',
+    });
+  };
 
   return Permission;
 };
