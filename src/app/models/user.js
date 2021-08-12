@@ -35,6 +35,13 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'address',
     });
+
+    User.belongsToMany(models.Permission, {
+      through: 'UserPermissions',
+      as: 'permissions',
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+    });
   };
 
   User.addHook('beforeSave', async (user) => {
