@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: false,
       },
+      descrription: DataTypes.STRING,
     },
     {},
   );

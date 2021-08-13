@@ -28,6 +28,30 @@ const permissions = [
     updatedAt: new Date(),
   },
   {
+    userId: 1,
+    permissionId: 5,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    userId: 1,
+    permissionId: 6,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    userId: 1,
+    permissionId: 7,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    userId: 1,
+    permissionId: 8,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
     userId: 2,
     permissionId: 1,
     createdAt: new Date(),
@@ -42,6 +66,18 @@ const permissions = [
   {
     userId: 2,
     permissionId: 4,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    userId: 2,
+    permissionId: 6,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    userId: 2,
+    permissionId: 8,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -70,7 +106,7 @@ module.exports = {
       if (!existedPermission) await queryInterface.bulkInsert('UserPermissions', [permission], {});
       else {
         console.log(
-          `O usuário de id${permission.userId}}' já tem a permissão de id ${permission.permissionId} `,
+          `O usuário de id ${permission.userId} já tem a permissão de id ${permission.permissionId}.`,
         );
       }
     }
@@ -83,13 +119,13 @@ module.exports = {
         {
           userId: 1,
           permissionId: {
-            [Op.in]: [1, 2, 3, 4],
+            [Op.in]: [1, 2, 3, 4, 5, 6, 7, 8],
           },
         },
         {
           userId: 2,
           permissionId: {
-            [Op.in]: [1, 3, 4],
+            [Op.in]: [1, 3, 4, 6, 8],
           },
         },
         { userId: 3, permissionId: 3 },
