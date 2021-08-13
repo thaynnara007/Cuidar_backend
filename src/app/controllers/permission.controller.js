@@ -96,8 +96,40 @@ const edit = async (req, res) => {
   }
 };
 
+const delet = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    log.info(`Iniciando deleção da permissão de id ${id}`);
+    log.info('Buscando permissão');
+
+    const permission = await service.getById(id);
+
+    if (!permission) return res.status(StatusCodes.NOT_FOUND).json('Permissão não encontrada');
+
+    log.info('Deletando permissão');
+    await service.delet(permission);
+
+    log.info('Deleção finalizada com sucesso.');
+    return res.status(StatusCodes.OK).json('Permissão deletada.');
+  } catch (error) {
+    const errorMsg = 'Erro ao deletar permissão';
+
+    log.error(
+      errorMsg,
+      'app/controllers/permission.controller.js',
+      error.message,
+    );
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
 module.exports = {
   create,
   getAll,
   edit,
+  delet,
 };

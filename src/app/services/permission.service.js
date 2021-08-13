@@ -40,10 +40,13 @@ const edit = async (id, data) => Permission.update(data, {
   },
 });
 
+const delet = async (permission) => permission.destroy();
+
 module.exports = {
   create,
   getByName,
   getAll,
   getById,
   edit,
+  delet,
 };
