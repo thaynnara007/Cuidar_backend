@@ -24,6 +24,8 @@ const getById = (id) => User.findByPk(id, {
   ],
 });
 
+const getJustUserById = (id) => User.findByPk(id);
+
 const getAll = async (query) => {
   const page = parseInt(query.page, 10);
   const pageSize = parseInt(query.pageSize, 10);
@@ -86,10 +88,14 @@ const updatePermissions = (userId, permissions) => Promise.all(
   }),
 );
 
+const delet = (user) => user.destroy();
+
 module.exports = {
   create,
   getByEmail,
   getById,
   getAll,
+  getJustUserById,
   updatePermissions,
+  delet,
 };
