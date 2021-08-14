@@ -17,7 +17,7 @@ const create = async (req, res) => {
     if (userWithSameEmail) {
       return res
         .status(StatusCodes.CONFLICT)
-        .json({ error: 'Um usuário com o mesmo email já xiste' });
+        .json({ error: 'Um usuário de mesmo email já existe.' });
     }
 
     log.info('Criando usuário');
@@ -45,6 +45,34 @@ const create = async (req, res) => {
   }
 };
 
+const getById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    log.info(`Iniciando busca por usuário. userId = ${id}`);
+
+    const user = await service.getById(id);
+
+    if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Usuário não encontrado' });
+    }
+
+    log.info(`Finalizando busca por usuário. userId = ${id}`);
+    return res.status(StatusCodes.OK).json(user);
+  } catch (error) {
+    const errorMsg = 'Erro buscar usuário';
+
+    log.error(errorMsg, 'app/controllers/user.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
 module.exports = {
   create,
+  getById,
 };

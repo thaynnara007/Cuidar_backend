@@ -40,13 +40,13 @@ const updatePermissions = (userId, permissions) => Promise.all(
       );
     }
 
-    const relation = await UserPermission.findOne({
+    const relationship = await UserPermission.findOne({
       where: {
         ...data,
       },
     });
 
-    if (relation) await relation.destroy();
+    if (relationship) await relationship.destroy();
     else await UserPermission.create(data);
   }),
 );
