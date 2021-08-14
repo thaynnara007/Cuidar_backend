@@ -74,7 +74,9 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    return jwt.sign({ id: this.id, permissions }, secret);
+    return jwt.sign({ id: this.id, permissions }, secret, {
+      expiresIn: `${config.expirationLogin}h`,
+    });
   };
 
   return User;
