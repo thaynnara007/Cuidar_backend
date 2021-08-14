@@ -72,7 +72,29 @@ const getById = async (req, res) => {
   }
 };
 
+const getAll = async (req, res) => {
+  try {
+    const { query } = req;
+
+    log.info(`Iniciando listagem dos usuarios, page: ${query.page}`);
+
+    const users = await service.getAll(query);
+
+    log.info('Busca finalizada com sucesso');
+    return res.status(StatusCodes.OK).json(users);
+  } catch (error) {
+    const errorMsg = 'Erro buscar usuário';
+
+    log.error(errorMsg, 'app/controllers/user.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
 module.exports = {
   create,
   getById,
+  getAll,
 };
