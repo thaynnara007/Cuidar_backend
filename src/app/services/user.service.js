@@ -88,6 +88,12 @@ const updatePermissions = (userId, permissions) => Promise.all(
   }),
 );
 
+const updateUser = (id, data) => User.update(data, {
+  where: {
+    id,
+  },
+});
+
 const delet = (user) => user.destroy();
 
 module.exports = {
@@ -97,5 +103,6 @@ module.exports = {
   getAll,
   getJustUserById,
   updatePermissions,
+  updateUser,
   delet,
 };

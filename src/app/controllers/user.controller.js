@@ -16,11 +16,9 @@ const create = async (req, res) => {
     }
 
     if (!user.phoneNumber) {
-      res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({
-          error: 'O número de telefone precisa ser passado na requisição',
-        });
+      res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'O número de telefone precisa ser passado na requisição',
+      });
     }
 
     if (!user.password) {
@@ -113,9 +111,64 @@ const getAll = async (req, res) => {
   }
 };
 
+const edit = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { user, address, permissions } = req.body;
+
+    log.info(`Iniciando atualização do usuário. userId = ${id}`);
+    log.info('Verificando se usuário existe');
+
+    const existedUser = await service.getJustUserById(id);
+
+    if (!existedUser) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: 'Usuário não encontrado' });
+    }
+
+    if (user.email) {
+      log.info(`Validando email. email = ${user.email}`);
+
+      const userWithSameEmail = await service.getByEmail(user.email);
+
+      if (userWithSameEmail && `${userWithSameEmail.id}` !== `${id}`) {
+        return res
+          .status(StatusCodes.CONFLICT)
+          .json({ error: 'Um usuário de mesmo email já existe.' });
+      }
+    }
+
+    log.info('Atualizando dados do usuário');
+    await service.updateUser(id, user);
+
+    log.info('Atualizando dados do endereço');
+    await addressService.edit(id, address);
+
+    log.info('Atualizando permissões');
+    await service.updatePermissions(id, permissions);
+
+    log.info('Buscando dados atualizados do usuário');
+    const userInfo = await service.getById(id);
+
+    log.info('Finalizando atualização');
+    return res.status(StatusCodes.OK).json(userInfo);
+  } catch (error) {
+    const errorMsg = 'Erro atualizar usuário';
+
+    log.error(errorMsg, 'app/controllers/user.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
 const delet = async (req, res) => {
   try {
     const { id } = req.params;
+
+    log.info(`Iniciando remoção de usuário. userId = ${id}`);
 
     const user = await service.getJustUserById(id);
 
@@ -127,6 +180,7 @@ const delet = async (req, res) => {
 
     await service.delet(user);
 
+    log.info('Finalizando remoção de usuário.');
     return res.status(StatusCodes.OK).json('Usuário deletado com sucesso.');
   } catch (error) {
     const errorMsg = 'Erro deletar usuário';
@@ -143,5 +197,6 @@ module.exports = {
   create,
   getById,
   getAll,
+  edit,
   delet,
 };
