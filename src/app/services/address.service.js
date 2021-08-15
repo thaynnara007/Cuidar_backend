@@ -10,7 +10,7 @@ const getAll = async (query) => {
   const page = parseInt(query.page, 10);
   const pageSize = parseInt(query.pageSize, 10);
   let offset = null;
-  let adress = null;
+  let address = null;
 
   if (page && pageSize) offset = (page - 1) * pageSize;
 
@@ -20,14 +20,14 @@ const getAll = async (query) => {
       offset,
       distinct: true,
     };
-    adress = await Address.findAndCountAll(options);
+    address = await Address.findAndCountAll(options);
 
-    adress.pages = Math.ceil(adress.count / pageSize);
+    address.pages = Math.ceil(address.count / pageSize);
   } else {
-    adress = await Address.findAll();
+    address = await Address.findAll();
   }
 
-  return adress;
+  return address;
 };
 
 const getByUserId = async (userId) => {
