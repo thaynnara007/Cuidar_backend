@@ -6,6 +6,7 @@ const transporter = nodemailer.createTransport({
   host: EMAIL.smtp,
   port: EMAIL.port,
   secure: false,
+  requireTLS: true,
   service: 'gmail',
   auth: {
     user: EMAIL.email,
@@ -23,7 +24,7 @@ const sendForgetPasswordEmail = async (sendTo, forgetPasswordCode) => {
     html,
   };
 
-  await transporter.sendMail(mailOptions);
+  transporter.sendMail(mailOptions);
 };
 
 module.exports = {

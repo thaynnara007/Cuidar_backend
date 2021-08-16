@@ -34,8 +34,8 @@ services:
       JWT_EXPIRES_TIME_LOGIN: 24
       GMAIL_EMAIL: ${GMAIL_EMAIL}
       GMAIL_PASSWORD: ${GMAIL_PASSWORD}
-      EMAIL_PORT: 587
-      EMAIL_SMTP_HOST: smtp.example.com
+      EMAIL_SMTP_PORT: 587
+      EMAIL_SMTP_HOST: smtp.gmail.com
     command: npm run start
 
   cuidar_db:

@@ -2,6 +2,8 @@ const httpStatus = require('http-status-codes');
 const log = require('../services/log.service');
 const service = require('../services/user.service');
 const addressService = require('../services/address.service');
+const emailService = require('../services/email.service');
+const util = require('../services/util.service');
 
 const { StatusCodes } = httpStatus;
 
@@ -139,14 +141,20 @@ const edit = async (req, res) => {
       }
     }
 
-    log.info('Atualizando dados do usuário');
-    await service.updateUser(id, user);
+    if (user) {
+      log.info('Atualizando dados do usuário');
+      await service.updateUser(id, user);
+    }
 
-    log.info('Atualizando dados do endereço');
-    await addressService.edit(id, address);
+    if (address) {
+      log.info('Atualizando dados do endereço');
+      await addressService.edit(id, address);
+    }
 
-    log.info('Atualizando permissões');
-    await service.updatePermissions(id, permissions);
+    if (permissions) {
+      log.info('Atualizando permissões');
+      await service.updatePermissions(id, permissions);
+    }
 
     log.info('Buscando dados atualizados do usuário');
     const userInfo = await service.getById(id);
@@ -193,10 +201,49 @@ const delet = async (req, res) => {
   }
 };
 
+const forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    log.info(
+      `Inicializando processo de recuperação de senha. user email = ${email}`,
+    );
+    log.info('Buscando usuário por email');
+
+    const user = await service.getByEmail(email);
+
+    if (user) {
+      const code = util.getRandomNumber();
+
+      log.info('Salvando codigo de recuperação');
+      await service.saveForgetPasswordCode(user.id, code);
+
+      log.info('Enviando codigo por email');
+      emailService.sendForgetPasswordEmail(email, code);
+    }
+
+    log.info('Finalizando processo de recuperação de senha.');
+    return res
+      .status(StatusCodes.OK)
+      .json(
+        'Se seu email tiver sido cadastrado em nossa plataforma, você receberá um email de recuperação de senha.',
+      );
+  } catch (error) {
+    const errorMsg = 'Erro enviar email de recuperação de senha';
+
+    log.error(errorMsg, 'app/controllers/user.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
 module.exports = {
   create,
   getById,
   getAll,
   edit,
+  forgetPassword,
   delet,
 };

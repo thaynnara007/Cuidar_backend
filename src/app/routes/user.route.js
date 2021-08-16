@@ -4,6 +4,7 @@ const controller = require('../controllers/user.controller');
 const router = express.Router();
 
 router.post('/', controller.create);
+router.post('/forgetPassword', controller.forgetPassword);
 router.get('/:id', controller.getById);
 router.get('/', controller.getAll);
 router.put('/:id', controller.edit);

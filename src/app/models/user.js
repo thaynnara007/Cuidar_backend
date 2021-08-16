@@ -66,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
     forgetPassword = false,
     permissions,
   ) {
-    const { secret, expirationMinutes } = config.JWT;
+    const { secret, expirationMinutes, expirationLogin } = config.JWT;
 
     if (forgetPassword) {
       return jwt.sign({ id: this.id }, secret, {
@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     return jwt.sign({ id: this.id, permissions }, secret, {
-      expiresIn: `${config.expirationLogin}h`,
+      expiresIn: `${expirationLogin}h`,
     });
   };
 
