@@ -4,9 +4,9 @@ const { verifyAuthorization } = require('../middlewares/auth');
 
 const router = express.Router();
 
-router.post('/', verifyAuthorization('create_user'), controller.create);
-router.get('/', verifyAuthorization('create_user'), controller.getAll);
-router.put('/:id', verifyAuthorization('create_user'), controller.edit);
-router.delete('/:id', verifyAuthorization('create_user'), controller.delet);
+router.post('/', verifyAuthorization('criar usuário'), controller.create);
+router.get('/', verifyAuthorization('criar usuário'), controller.getAll);
+router.put('/:id', verifyAuthorization('criar usuário'), controller.edit);
+router.delete('/:id', verifyAuthorization('criar usuário'), controller.delet);
 
 module.exports = router;
