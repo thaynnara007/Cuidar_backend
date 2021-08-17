@@ -33,6 +33,28 @@ const login = async (email, password) => {
   };
 };
 
+const verifyForgetPasswordCode = async (email, code) => {
+  const user = await User.findOne({
+    where: {
+      email,
+    },
+    attributes: {
+      include: 'forgetPasswordCode',
+    },
+  });
+
+  if (!user) return null;
+
+  const validCode = await user.checkForgetPasswordCode(code);
+
+  if (!validCode) return null;
+
+  return {
+    token: user.generateAuthToken(true),
+  };
+};
+
 module.exports = {
   login,
+  verifyForgetPasswordCode,
 };

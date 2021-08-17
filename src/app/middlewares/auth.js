@@ -34,7 +34,7 @@ const verifyAuthorization = (permission) => async (req, res, next) => {
     }
 
     if (!permissions.includes(permission)) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
+      return res.status(StatusCodes.FORBIDDEN).json({
         error: 'Seu usuário não tem permissão para executar essa operação.',
       });
     }
