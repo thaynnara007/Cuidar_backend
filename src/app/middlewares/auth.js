@@ -33,7 +33,7 @@ const verifyAuthorization = (permission) => async (req, res, next) => {
         .json({ error: 'Usuário não encontrado' });
     }
 
-    if (!permissions.includes(permission)) {
+    if (permission && !permissions?.includes(permission)) {
       return res.status(StatusCodes.FORBIDDEN).json({
         error: 'Seu usuário não tem permissão para executar essa operação.',
       });
