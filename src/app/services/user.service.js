@@ -114,6 +114,8 @@ const changePassword = (user, newPassword) => {
   updatedUser.password = newPassword;
   updatedUser.forgetPasswordCode = null;
 
+  console.log('');
+
   return updatedUser.save();
 };
 
