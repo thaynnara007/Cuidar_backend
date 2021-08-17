@@ -15,5 +15,5 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
   },
-  rules: { '@babel/no-unused-expressions': 0 },
+  rules: { '@babel/no-unused-expressions': 0, 'no-console': 2 },
 };
