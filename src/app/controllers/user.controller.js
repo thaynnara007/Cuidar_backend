@@ -106,6 +106,8 @@ const getByMe = async (req, res) => {
         .json({ error: 'Usuário não encontrado' });
     }
 
+    delete user.dataValues.permissions;
+
     log.info(`Finalizando busca por usuário logado. userId = ${id}`);
     return res.status(StatusCodes.OK).json(user);
   } catch (error) {
@@ -215,13 +217,15 @@ const editMe = async (req, res) => {
       if (userWithSameEmail && `${userWithSameEmail.id}` !== `${id}`) {
         return res
           .status(StatusCodes.CONFLICT)
-          .json({ error: 'Um usuário de mesmo email já existe.' });
+          .json({ error: 'Esse email já foi cadastrado.' });
       }
     }
 
     if (user) {
       log.info('Atualizando dados do usuário');
       await service.updateUser(id, user);
+
+      if (user.password) service.changePassword(req.user, user.password);
     }
 
     if (address) {

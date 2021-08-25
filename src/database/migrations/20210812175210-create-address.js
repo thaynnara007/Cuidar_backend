@@ -8,8 +8,8 @@ module.exports = {
     },
     userId: {
       type: Sequelize.INTEGER,
-      allowNull: false,
-      unique: true,
+      allowNull: true,
+      unique: false,
       references: {
         model: 'Users',
         key: 'id',
@@ -21,7 +21,7 @@ module.exports = {
       type: Sequelize.STRING,
     },
     number: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
     },
     district: {
       type: Sequelize.STRING,
