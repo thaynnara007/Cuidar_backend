@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status-codes');
-const { User } = require('../models');
+const userService = require('../services/user.service');
 const config = require('../../config/environment');
 
 const { StatusCodes } = httpStatus;
@@ -25,7 +25,7 @@ const verifyAuthorization = (permission) => async (req, res, next) => {
 
     const { id, permissions } = jwt.verify(token, config.JWT.secret);
 
-    const user = await User.findByPk(id);
+    const user = await userService.getJustUserById(id);
 
     if (!user) {
       return res
@@ -47,7 +47,7 @@ const verifyAuthorization = (permission) => async (req, res, next) => {
 
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: `${errorMsg} ${error.message}` });
+      .json({ error: `${errorMsg}, ${error.message}` });
   }
 };
 

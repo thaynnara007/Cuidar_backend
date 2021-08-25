@@ -14,19 +14,19 @@ const create = async (req, res) => {
     if (!user.email) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'O email precisa ser passado na requisição' });
+        .json({ error: 'O email precisa ser preenchido' });
     }
 
     if (!user.phoneNumber) {
       res.status(StatusCodes.BAD_REQUEST).json({
-        error: 'O número de telefone precisa ser passado na requisição',
+        error: 'O número de telefone precisa ser preenchido',
       });
     }
 
     if (!user.password) {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'A senha precisa ser passado na requisição' });
+        .json({ error: 'A senha precisa ser preenchido' });
     }
 
     log.info(`Inicializando criação do usuário. user's email = ${user.email}`);
@@ -92,6 +92,33 @@ const getById = async (req, res) => {
   }
 };
 
+const getByMe = async (req, res) => {
+  try {
+    const { id } = req.user;
+
+    log.info(`Iniciando busca por usuário logado. userId = ${id}`);
+
+    const user = await service.getById(id);
+
+    if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Usuário não encontrado' });
+    }
+
+    log.info(`Finalizando busca por usuário logado. userId = ${id}`);
+    return res.status(StatusCodes.OK).json(user);
+  } catch (error) {
+    const errorMsg = 'Erro buscar usuário logado';
+
+    log.error(errorMsg, 'app/controllers/user.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
 const getAll = async (req, res) => {
   try {
     const { query } = req;
@@ -129,7 +156,7 @@ const edit = async (req, res) => {
         .json({ error: 'Usuário não encontrado' });
     }
 
-    if (user.email) {
+    if (user?.email) {
       log.info(`Validando email. email = ${user.email}`);
 
       const userWithSameEmail = await service.getByEmail(user.email);
@@ -163,6 +190,52 @@ const edit = async (req, res) => {
     return res.status(StatusCodes.OK).json(userInfo);
   } catch (error) {
     const errorMsg = 'Erro atualizar usuário';
+
+    log.error(errorMsg, 'app/controllers/user.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
+const editMe = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const { user, address } = req.body;
+
+    log.info(`Iniciando atualização do usuário logado. userId = ${id}`);
+    log.info('Verificando se usuário existe');
+
+    if (user?.email) {
+      log.info(`Validando email. email = ${user.email}`);
+
+      const userWithSameEmail = await service.getByEmail(user.email);
+
+      if (userWithSameEmail && `${userWithSameEmail.id}` !== `${id}`) {
+        return res
+          .status(StatusCodes.CONFLICT)
+          .json({ error: 'Um usuário de mesmo email já existe.' });
+      }
+    }
+
+    if (user) {
+      log.info('Atualizando dados do usuário');
+      await service.updateUser(id, user);
+    }
+
+    if (address) {
+      log.info('Atualizando dados do endereço');
+      await addressService.edit(id, address);
+    }
+
+    log.info('Buscando dados atualizados do usuário');
+    const userInfo = await service.getById(id);
+
+    log.info('Finalizando atualização');
+    return res.status(StatusCodes.OK).json(userInfo);
+  } catch (error) {
+    const errorMsg = 'Erro atualizar usuário logado.';
 
     log.error(errorMsg, 'app/controllers/user.controller.js', error.message);
 
@@ -265,7 +338,9 @@ module.exports = {
   create,
   getById,
   getAll,
+  getByMe,
   edit,
+  editMe,
   forgetPassword,
   changePassword,
   delet,
