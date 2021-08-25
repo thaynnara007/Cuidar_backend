@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'Address',
     {
       street: DataTypes.STRING,
-      number: DataTypes.INTEGER,
+      number: DataTypes.STRING,
       district: DataTypes.STRING,
       complement: DataTypes.TEXT,
       zipCode: DataTypes.STRING,

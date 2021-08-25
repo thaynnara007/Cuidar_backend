@@ -1,12 +1,25 @@
 const express = require('express');
 const controller = require('../controllers/permission.controller');
 const { verifyAuthorization } = require('../middlewares/auth');
+const { CREATE_USER_PERMISSION } = require('../util/constants');
 
 const router = express.Router();
 
-router.post('/', verifyAuthorization('criar usuário'), controller.create);
-router.get('/', verifyAuthorization('criar usuário'), controller.getAll);
-router.put('/:id', verifyAuthorization('criar usuário'), controller.edit);
-router.delete('/:id', verifyAuthorization('criar usuário'), controller.delet);
+router.post(
+  '/',
+  verifyAuthorization(CREATE_USER_PERMISSION),
+  controller.create,
+);
+router.get('/', verifyAuthorization(CREATE_USER_PERMISSION), controller.getAll);
+router.put(
+  '/:id',
+  verifyAuthorization(CREATE_USER_PERMISSION),
+  controller.edit,
+);
+router.delete(
+  '/:id',
+  verifyAuthorization(CREATE_USER_PERMISSION),
+  controller.delet,
+);
 
 module.exports = router;

@@ -8,6 +8,18 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (!email) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: 'O email precisa ser preenchido' });
+    }
+
+    if (!password) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: 'A senha precisa ser preenchido' });
+    }
+
     log.info(`Iniciando login. user's email = ${email}`);
 
     const result = await service.login(email, password);

@@ -16,10 +16,10 @@ const login = async (email, password) => {
     ],
   });
 
+  if (!user) return null;
+
   const { permissions } = user.dataValues;
   const permissionsNames = permissions.map((permission) => permission.name);
-
-  if (!user) return null;
 
   const validPassword = await user.checkPassword(password);
 
