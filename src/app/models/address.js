@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       as: 'user',
       onDelete: 'CASCADE',
     });
+    Address.belongsTo(models.Patient, {
+      foreignKey: 'patientId',
+      as: 'patient',
+      onDelete: 'CASCADE',
+    });
   };
   return Address;
 };
