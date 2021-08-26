@@ -238,6 +238,22 @@ const edit = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    log.info(`Iniciando remoção do paciente. patientId = ${id}`);
+
+    const patient = await service.getJustPacientById(id);
+
+    if (!patient) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Paciente não encontrado' });
+    }
+
+    await service.delet(patient);
+
+    log.info('Finalizando remoção do paciente.');
+    return res.status(StatusCodes.OK).json('Paciente deletado com sucesso.');
   } catch (error) {
     const errorMsg = 'Erro ao apagar paciente';
 

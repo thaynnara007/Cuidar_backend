@@ -69,6 +69,8 @@ const changePassword = (patient, newPassword) => {
   return updatedPatient.save();
 };
 
+const delet = (patient) => patient.destroy();
+
 module.exports = {
   create,
   getById,
@@ -78,4 +80,5 @@ module.exports = {
   getAll,
   update,
   changePassword,
+  delet
 };
