@@ -2,7 +2,6 @@ const httpStatus = require('http-status-codes');
 const log = require('../services/log.service');
 const service = require('../services/patient.service');
 const addressService = require('../services/address.service');
-const emailService = require('../services/email.service');
 const util = require('../services/util.service');
 
 const { StatusCodes } = httpStatus;
@@ -173,6 +172,59 @@ const getAll = async (req, res) => {
 
 const edit = async (req, res) => {
   try {
+    const { id } = req.patient;
+    let { patient } = req.body;
+    const { address } = req.body;
+
+    log.info(`Iniciando atualização do paciente. patientId = ${id}`);
+    log.info(`Normalizando dados.`);
+
+    delete patient.cpf
+
+    if (patient.birthday) {
+      const birthday = new Date(patient.birthday);
+
+      if (Number.isNaN(birthday.getTime())) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          error: 'Formato de data inválida',
+        });
+      }
+
+      patient = {
+        ...patient,
+        birthday: new Date(patient.birthday),
+      };
+    }
+
+    if (patient?.email) {
+      log.info(`Validando email. email = ${patient.email}`);
+
+      const patientWithSameEmail = await service.getByEmail(patient.email);
+
+      if (patientWithSameEmail && `${patientWithSameEmail.id}` !== `${id}`) {
+        return res
+          .status(StatusCodes.CONFLICT)
+          .json({ error: 'Um paciente de mesmo email já existe.' });
+      }
+    }
+
+    if (patient) {
+      log.info('Atualizando dados do paciente');
+      await service.update(id, patient);
+
+      if (patient.password) service.changePassword(req.patient, patient.password);
+    }
+
+    if (address) {
+      log.info('Atualizando dados do endereço');
+      await addressService.editByPatient(id, address);
+    }
+
+    log.info('Buscando dados atualizados do paciente');
+    const patientInfo = await service.getById(id);
+
+    log.info('Finalizando atualização');
+    return res.status(StatusCodes.OK).json(patientInfo);
   } catch (error) {
     const errorMsg = 'Erro ao atualizar paciente';
 
