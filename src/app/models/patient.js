@@ -23,7 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.VIRTUAL,
       passwordHash: DataTypes.STRING,
       forgetPasswordCode: DataTypes.STRING,
-      firstLogin: DataTypes.BOOLEAN,
+      firstLogin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
     },
     {
       defaultScope: {

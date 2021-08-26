@@ -12,7 +12,7 @@ module.exports = {
     lastName: {
       type: Sequelize.STRING,
     },
-    cpg: {
+    cpf: {
       type: Sequelize.STRING,
       unique: true,
       allowNull: false,
@@ -36,7 +36,7 @@ module.exports = {
     },
     firstLogin: {
       type: Sequelize.BOOLEAN,
-      default: false,
+      defaultValue: true,
     },
     createdAt: {
       allowNull: false,
