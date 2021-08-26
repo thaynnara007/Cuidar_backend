@@ -31,7 +31,7 @@ const create = async (req, res) => {
     log.error(
       errorMsg,
       'app/controllers/permission.controller.js',
-      error.message,
+      error.message
     );
 
     return res
@@ -56,7 +56,7 @@ const getAll = async (req, res) => {
     log.error(
       errorMsg,
       'app/controllers/permission.controller.js',
-      error.message,
+      error.message
     );
 
     return res
@@ -74,7 +74,8 @@ const edit = async (req, res) => {
 
     const [updated] = await service.edit(id, body);
 
-    if (!updated) return res.status(StatusCodes.NOT_FOUND).json('Permissão não encontrada');
+    if (!updated)
+      return res.status(StatusCodes.NOT_FOUND).json('Permissão não encontrada');
 
     log.info('Buscando permissão atualizada');
     const permission = await service.getById(id);
@@ -87,7 +88,7 @@ const edit = async (req, res) => {
     log.error(
       errorMsg,
       'app/controllers/permission.controller.js',
-      error.message,
+      error.message
     );
 
     return res
@@ -105,7 +106,8 @@ const delet = async (req, res) => {
 
     const permission = await service.getById(id);
 
-    if (!permission) return res.status(StatusCodes.NOT_FOUND).json('Permissão não encontrada');
+    if (!permission)
+      return res.status(StatusCodes.NOT_FOUND).json('Permissão não encontrada');
 
     log.info('Deletando permissão');
     await service.delet(permission);
@@ -118,7 +120,7 @@ const delet = async (req, res) => {
     log.error(
       errorMsg,
       'app/controllers/permission.controller.js',
-      error.message,
+      error.message
     );
 
     return res

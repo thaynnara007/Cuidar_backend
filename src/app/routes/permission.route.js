@@ -8,18 +8,18 @@ const router = express.Router();
 router.post(
   '/',
   verifyAuthorization(CREATE_USER_PERMISSION),
-  controller.create,
+  controller.create
 );
 router.get('/', verifyAuthorization(CREATE_USER_PERMISSION), controller.getAll);
 router.put(
   '/:id',
   verifyAuthorization(CREATE_USER_PERMISSION),
-  controller.edit,
+  controller.edit
 );
 router.delete(
   '/:id',
   verifyAuthorization(CREATE_USER_PERMISSION),
-  controller.delet,
+  controller.delet
 );
 
 module.exports = router;

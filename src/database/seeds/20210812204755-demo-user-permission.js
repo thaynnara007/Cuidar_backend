@@ -100,37 +100,39 @@ module.exports = {
             permissionId: permission.permissionId,
           },
         },
-        ['id'],
+        ['id']
       );
 
-      if (!existedPermission) await queryInterface.bulkInsert('UserPermissions', [permission], {});
+      if (!existedPermission)
+        await queryInterface.bulkInsert('UserPermissions', [permission], {});
       else {
         console.log(
-          `O usuário de id ${permission.userId} já tem a permissão de id ${permission.permissionId}.`,
+          `O usuário de id ${permission.userId} já tem a permissão de id ${permission.permissionId}.`
         );
       }
     }
   },
 
-  down: (queryInterface) => queryInterface.bulkDelete(
-    'UserPermissions',
-    {
-      [Op.or]: [
-        {
-          userId: 1,
-          permissionId: {
-            [Op.in]: [1, 2, 3, 4, 5, 6, 7, 8],
+  down: (queryInterface) =>
+    queryInterface.bulkDelete(
+      'UserPermissions',
+      {
+        [Op.or]: [
+          {
+            userId: 1,
+            permissionId: {
+              [Op.in]: [1, 2, 3, 4, 5, 6, 7, 8],
+            },
           },
-        },
-        {
-          userId: 2,
-          permissionId: {
-            [Op.in]: [1, 3, 4, 6, 8],
+          {
+            userId: 2,
+            permissionId: {
+              [Op.in]: [1, 3, 4, 6, 8],
+            },
           },
-        },
-        { userId: 3, permissionId: 3 },
-      ],
-    },
-    {},
-  ),
+          { userId: 3, permissionId: 3 },
+        ],
+      },
+      {}
+    ),
 };

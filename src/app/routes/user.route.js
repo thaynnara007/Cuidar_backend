@@ -12,7 +12,7 @@ const router = express.Router();
 router.post(
   '/',
   auth.verifyAuthorization(CREATE_USER_PERMISSION),
-  controller.create,
+  controller.create
 );
 router.post('/forgetPassword', controller.forgetPassword);
 
@@ -20,30 +20,30 @@ router.get('/me', auth.verifyAuthorization(), controller.getByMe);
 router.get(
   '/:id',
   auth.verifyAuthorization(GET_USER_PERMISSION),
-  controller.getById,
+  controller.getById
 );
 router.get(
   '/',
   auth.verifyAuthorization(GET_USER_PERMISSION),
-  controller.getAll,
+  controller.getAll
 );
 
 router.put(
   '/changePassword',
   auth.verifyAuthorization(),
-  controller.changePassword,
+  controller.changePassword
 );
 router.put('/me', auth.verifyAuthorization(), controller.editMe);
 router.put(
   '/:id',
   auth.verifyAuthorization(CREATE_USER_PERMISSION),
-  controller.edit,
+  controller.edit
 );
 
 router.delete(
   '/:id',
   auth.verifyAuthorization(DELETE_USER_PERMISSION),
-  controller.delet,
+  controller.delet
 );
 
 module.exports = router;

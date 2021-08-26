@@ -13,6 +13,15 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: false,
       },
+      cpfFormatted: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.cpf.replace(
+            /(\d{3})?(\d{3})?(\d{3})?(\d{2})/,
+            '$1.$2.$3-$4'
+          );
+        },
+      },
       birthday: DataTypes.DATE,
       phoneNumber: DataTypes.STRING,
       email: {
@@ -34,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
           exclude: ['password', 'passwordHash', 'forgetPasswordCode'],
         },
       },
-    },
+    }
   );
   Patient.associate = (models) => {
     Patient.hasOne(models.Address, {
@@ -44,7 +53,8 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Patient.addHook('beforeSave', async (patient) => {
-    if (patient.password) patient.passwordHash = await bcrypt.hash(patient.password, 5);
+    if (patient.password)
+      patient.passwordHash = await bcrypt.hash(patient.password, 5);
 
     return patient;
   });

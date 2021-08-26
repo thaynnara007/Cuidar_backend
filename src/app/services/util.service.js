@@ -93,9 +93,9 @@ function getDateTime(date, type) {
   if (!date) date = new Date();
 
   return `${date.getFullYear()}-${`0${date.getMonth() + 1}`.slice(
-    -2,
+    -2
   )}-${`0${date.getDate()}`.slice(-2)} ${`0${date.getHours()}`.slice(
-    -2,
+    -2
   )}:${`0${date.getMinutes()}`.slice(-2)}:${`0${date.getSeconds()}`.slice(-2)}`;
 }
 
@@ -131,13 +131,15 @@ const FIVE_MB = 5 * 1024 * 1024;
 const FORGET_PASSWORD_CODE_MIN = 1000;
 const FORGET_PASSWORD_CODE_MAX = 10000;
 
-const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+const capitalizeFirstLetter = (string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);
 
 const normalizeQuery = (query) => query.replace(/\+/g, ' ');
+const normalizeNumber = (query) => query.replace(/[^0-9]/g, '');
 
 const getRandomNumber = (
   min = FORGET_PASSWORD_CODE_MIN,
-  max = FORGET_PASSWORD_CODE_MAX,
+  max = FORGET_PASSWORD_CODE_MAX
 ) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -152,6 +154,7 @@ module.exports = {
   transformUnit,
   capitalizeFirstLetter,
   normalizeQuery,
+  normalizeNumber,
   getRandomNumber,
   DATE_FORMAT,
 };

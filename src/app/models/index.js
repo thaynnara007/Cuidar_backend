@@ -18,21 +18,22 @@ if (ENVIRONMENT === 'production') {
     config.database,
     config.username,
     config.password,
-    config,
+    config
   );
 }
 
 filesystem
   .readdirSync(__dirname)
   .filter(
-    (file) => file.indexOf('.') !== 0
-      && file !== path.basename(__filename)
-      && file.slice(-3) === '.js',
+    (file) =>
+      file.indexOf('.') !== 0 &&
+      file !== path.basename(__filename) &&
+      file.slice(-3) === '.js'
   )
   .forEach((file) => {
     const model = require(path.join(__dirname, file))(
       sequelize,
-      Sequelize.DataTypes,
+      Sequelize.DataTypes
     );
     database[model.name] = model;
   });

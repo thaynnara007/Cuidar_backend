@@ -49,7 +49,7 @@ const verifyCode = async (req, res) => {
     const { email, code } = req.body;
 
     log.info(
-      `Iniciando processo de verificação de código de recuperação de senha. user email = ${email}`,
+      `Iniciando processo de verificação de código de recuperação de senha. user email = ${email}`
     );
 
     const result = await service.verifyForgetPasswordCode(email, `${code}`);

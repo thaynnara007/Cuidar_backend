@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
           exclude: ['password', 'passwordHash', 'forgetPasswordCode'],
         },
       },
-    },
+    }
   );
 
   User.associate = (models) => {
@@ -56,14 +56,14 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.prototype.checkForgetPasswordCode = function checkForgetPasswordCode(
-    code,
+    code
   ) {
     return bcrypt.compare(code, this.forgetPasswordCode);
   };
 
   User.prototype.generateAuthToken = function generateAuthToken(
     forgetPassword = false,
-    permissions,
+    permissions
   ) {
     const { secret, expirationMinutes, expirationLogin } = config.JWT;
 

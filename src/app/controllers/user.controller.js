@@ -283,7 +283,7 @@ const forgetPassword = async (req, res) => {
     const { email } = req.body;
 
     log.info(
-      `Inicializando processo de recuperação de senha. user email = ${email}`,
+      `Inicializando processo de recuperação de senha. user email = ${email}`
     );
     log.info('Buscando usuário por email');
 
@@ -303,7 +303,7 @@ const forgetPassword = async (req, res) => {
     return res
       .status(StatusCodes.OK)
       .json(
-        'Se seu email tiver sido cadastrado em nossa plataforma, você receberá um email de recuperação de senha.',
+        'Se seu email tiver sido cadastrado em nossa plataforma, você receberá um email de recuperação de senha.'
       );
   } catch (error) {
     const errorMsg = 'Erro enviar email de recuperação de senha';

@@ -68,30 +68,32 @@ module.exports = {
             name: permission.name,
           },
         },
-        ['id'],
+        ['id']
       );
 
-      if (!existedPermission) await queryInterface.bulkInsert('Permissions', [permission], {});
+      if (!existedPermission)
+        await queryInterface.bulkInsert('Permissions', [permission], {});
       else console.log(`Papel de nome '${permission.name}' já existe`);
     }
   },
 
-  down: (queryInterface) => queryInterface.bulkDelete(
-    'Permissions',
-    {
-      name: {
-        [Op.in]: [
-          'criar atividade',
-          'criar usuário',
-          'criar paciente',
-          'ler usuário',
-          'remover paciente',
-          'delete_patients',
-          'remover usuário',
-          'remover atividade',
-        ],
+  down: (queryInterface) =>
+    queryInterface.bulkDelete(
+      'Permissions',
+      {
+        name: {
+          [Op.in]: [
+            'criar atividade',
+            'criar usuário',
+            'criar paciente',
+            'ler usuário',
+            'remover paciente',
+            'delete_patients',
+            'remover usuário',
+            'remover atividade',
+          ],
+        },
       },
-    },
-    {},
-  ),
+      {}
+    ),
 };
