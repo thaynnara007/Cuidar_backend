@@ -98,6 +98,20 @@ const create = async (req, res) => {
 
 const getById = async (req, res) => {
   try {
+    const { id } = req.params;
+
+    log.info(`Iniciando busca por paciente. patientId = ${id}`);
+
+    const patient = await service.getById(id);
+
+    if (!patient) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Paciente não encontrado' });
+    }
+
+    log.info(`Finalizando busca por paciente.`);
+    return res.status(StatusCodes.OK).json(patient);
   } catch (error) {
     const errorMsg = 'Erro ao buscar paciente';
 
