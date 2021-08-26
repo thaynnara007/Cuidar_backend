@@ -152,6 +152,14 @@ const getByMe = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
+    const { query } = req;
+
+    log.info(`Iniciando listagem dos pacientes, page: ${query.page}`);
+
+    const patients = await service.getAll(query);
+
+    log.info('Busca finalizada com sucesso');
+    return res.status(StatusCodes.OK).json(patients);
   } catch (error) {
     const errorMsg = 'Erro ao buscar pacientes';
 
