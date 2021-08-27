@@ -3,6 +3,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/environment');
+const { WHO_PATIENT } = require('../util/constants');
 
 module.exports = (sequelize, DataTypes) => {
   const Patient = sequelize.define(
@@ -71,15 +72,12 @@ module.exports = (sequelize, DataTypes) => {
     const { secret, expirationMinutes } = config.JWT;
 
     if (forgetPassword) {
-      return jwt.sign({ id: this.id, from: 'patient' }, secret, {
+      return jwt.sign({ id: this.id, from: WHO_PATIENT }, secret, {
         expiresIn: `${expirationMinutes}m`,
       });
     }
 
-    return jwt.sign(
-      { id: this.id, from: 'patient', email: this.email },
-      secret,
-    );
+    return jwt.sign({ id: this.id, from: WHO_PATIENT }, secret);
   };
 
   return Patient;

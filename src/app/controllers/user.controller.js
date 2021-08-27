@@ -94,7 +94,7 @@ const getById = async (req, res) => {
 
 const getByMe = async (req, res) => {
   try {
-    const { id } = req.user;
+    const { id } = req.logged.loggedAccount;
 
     log.info(`Iniciando busca por usuário logado. userId = ${id}`);
 
@@ -203,7 +203,7 @@ const edit = async (req, res) => {
 
 const editMe = async (req, res) => {
   try {
-    const { id } = req.user;
+    const { id } = req.logged.loggedAccount;
     const { user, address } = req.body;
 
     log.info(`Iniciando atualização do usuário logado. userId = ${id}`);
@@ -283,7 +283,7 @@ const forgetPassword = async (req, res) => {
     const { email } = req.body;
 
     log.info(
-      `Inicializando processo de recuperação de senha. user email = ${email}`
+      `Inicializando processo de recuperação de senha. user email = ${email}`,
     );
     log.info('Buscando usuário por email');
 
@@ -303,7 +303,7 @@ const forgetPassword = async (req, res) => {
     return res
       .status(StatusCodes.OK)
       .json(
-        'Se seu email tiver sido cadastrado em nossa plataforma, você receberá um email de recuperação de senha.'
+        'Se seu email tiver sido cadastrado em nossa plataforma, você receberá um email de recuperação de senha.',
       );
   } catch (error) {
     const errorMsg = 'Erro enviar email de recuperação de senha';

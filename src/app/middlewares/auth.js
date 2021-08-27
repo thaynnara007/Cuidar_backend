@@ -7,7 +7,7 @@ const { WHO_PATIENT, WHO_USER } = require('../util/constants');
 
 const { StatusCodes } = httpStatus;
 
-const verifyAuthorization = (who, permission) => async (req, res, next) => {
+const verifyAuthorization = (expectUser, permission) => async (req, res, next) => {
   try {
     const { authorization } = req.headers;
 
@@ -25,64 +25,37 @@ const verifyAuthorization = (who, permission) => async (req, res, next) => {
         .json({ error: 'Acesso negado. Token Inválido.' });
     }
 
-    const {
-      id, from, email, permissions,
-    } = jwt.verify(
-      token,
-      config.JWT.secret,
-    );
+    const { id, from, permissions } = jwt.verify(token, config.JWT.secret);
 
-    const user = await userService.getJustUserById(id);
-    const patient = await patientService.getJustPacientById(id);
+    if (expectUser && from !== expectUser) {
+      return res
+        .status(StatusCodes.LOCKED)
+        .json({ error: 'Não permitido ao seu tipo de usuário.' });
+    }
 
-    if (who === WHO_USER) {
-      if (!user) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ error: 'Usuário não encontrado' });
-      }
-
-      if (user.email !== email) {
-        return res.status(StatusCodes.LOCKED).json({ error: 'Não permitido.' });
-      }
-
+    if (expectUser === WHO_USER) {
       if (permission && !permissions?.includes(permission)) {
         return res.status(StatusCodes.FORBIDDEN).json({
           error: 'Seu usuário não tem permissão para executar essa operação.',
         });
       }
-
-      req.user = user;
-    } else if (who === WHO_PATIENT) {
-      if (!patient) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ error: 'Paciente não encontrado' });
-      }
-
-      if (patient.email !== email) {
-        return res.status(StatusCodes.LOCKED).json({ error: 'Não permitido.' });
-      }
-
-      req.patient = patient;
-    } else {
-      const foundAccount = from === 'user' ? user : patient;
-
-      if (!foundAccount) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ error: 'Conta não encontrada' });
-      }
-
-      if (foundAccount.email !== email) {
-        return res.status(StatusCodes.LOCKED).json({ error: 'Não permitido.' });
-      }
-
-      req.logged = {
-        loggedPerson: foundAccount,
-        who: from,
-      };
     }
+
+    let loggedAccount = null;
+
+    if (from === WHO_USER) loggedAccount = await userService.getJustUserById(id);
+    else if (from === WHO_PATIENT) loggedAccount = await patientService.getJustPacientById(id);
+
+    if (!loggedAccount) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Conta não encontrada' });
+    }
+
+    req.logged = {
+      loggedAccount,
+      who: from,
+    };
 
     return next();
   } catch (error) {

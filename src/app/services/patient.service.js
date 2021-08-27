@@ -2,29 +2,26 @@ const { Patient, Address } = require('../models');
 
 const create = (data) => Patient.create(data);
 
-const getByEmail = (email) =>
-  Patient.findOne({
-    where: {
-      email,
-    },
-  });
+const getByEmail = (email) => Patient.findOne({
+  where: {
+    email,
+  },
+});
 
-const getByCPF = (cpf) =>
-  Patient.findOne({
-    where: {
-      cpf,
-    },
-  });
+const getByCPF = (cpf) => Patient.findOne({
+  where: {
+    cpf,
+  },
+});
 
-const getById = (id) =>
-  Patient.findByPk(id, {
-    include: [
-      {
-        model: Address,
-        as: 'address',
-      },
-    ],
-  });
+const getById = (id) => Patient.findByPk(id, {
+  include: [
+    {
+      model: Address,
+      as: 'address',
+    },
+  ],
+});
 
 const getJustPacientById = (id) => Patient.findByPk(id);
 
@@ -53,12 +50,11 @@ const getAll = async (query) => {
   return patients;
 };
 
-const update = (id, data) =>
-  Patient.update(data, {
-    where: {
-      id,
-    },
-  });
+const update = (id, data) => Patient.update(data, {
+  where: {
+    id,
+  },
+});
 
 const changePassword = (patient, newPassword) => {
   const updatedPatient = patient;
@@ -80,5 +76,5 @@ module.exports = {
   getAll,
   update,
   changePassword,
-  delet
+  delet,
 };

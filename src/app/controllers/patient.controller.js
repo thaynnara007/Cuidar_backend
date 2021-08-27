@@ -12,7 +12,7 @@ const create = async (req, res) => {
     let { patient } = req.body;
 
     log.info(
-      `Inicializando criação do paciente. patient's email = ${patient.email}`
+      `Inicializando criação do paciente. patient's email = ${patient.email}`,
     );
 
     if (!patient.email) {
@@ -33,7 +33,7 @@ const create = async (req, res) => {
       });
     }
 
-    log.info(`Normalizando dados.`);
+    log.info('Normalizando dados.');
 
     if (patient.birthday) {
       const birthday = new Date(patient.birthday);
@@ -109,7 +109,7 @@ const getById = async (req, res) => {
         .json({ error: 'Paciente não encontrado' });
     }
 
-    log.info(`Finalizando busca por paciente.`);
+    log.info('Finalizando busca por paciente.');
     return res.status(StatusCodes.OK).json(patient);
   } catch (error) {
     const errorMsg = 'Erro ao buscar paciente';
@@ -124,7 +124,7 @@ const getById = async (req, res) => {
 
 const getByMe = async (req, res) => {
   try {
-    const { id } = req.patient;
+    const { id } = req.logged.loggedAccount;
 
     log.info(`Iniciando busca por paciente logado. patientId = ${id}`);
 
@@ -136,7 +136,7 @@ const getByMe = async (req, res) => {
         .json({ error: 'Paciente não encontrado' });
     }
 
-    log.info(`Finalizando busca por paciente logado.`);
+    log.info('Finalizando busca por paciente logado.');
     return res.status(StatusCodes.OK).json(patient);
   } catch (error) {
     const errorMsg = 'Erro ao buscar paciente logado';
@@ -172,14 +172,14 @@ const getAll = async (req, res) => {
 
 const edit = async (req, res) => {
   try {
-    const { id } = req.patient;
-    let { patient } = req.body;
+    const { id, cpf } = req.logged.loggedAccount;
     const { address } = req.body;
+    let { patient } = req.body;
 
     log.info(`Iniciando atualização do paciente. patientId = ${id}`);
-    log.info(`Normalizando dados.`);
+    log.info('Normalizando dados.');
 
-    delete patient.cpf
+    patient.cpf = cpf;
 
     if (patient.birthday) {
       const birthday = new Date(patient.birthday);
@@ -212,7 +212,7 @@ const edit = async (req, res) => {
       log.info('Atualizando dados do paciente');
       await service.update(id, patient);
 
-      if (patient.password) service.changePassword(req.patient, patient.password);
+      if (patient.password) service.changePassword(req.logged.loggedAccount, patient.password);
     }
 
     if (address) {
