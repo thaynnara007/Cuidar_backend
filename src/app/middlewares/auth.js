@@ -1,11 +1,13 @@
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status-codes');
 const userService = require('../services/user.service');
+const patientService = require('../services/patient.service');
 const config = require('../../config/environment');
+const { WHO_PATIENT, WHO_USER } = require('../util/constants');
 
 const { StatusCodes } = httpStatus;
 
-const verifyAuthorization = (permission) => async (req, res, next) => {
+const verifyAuthorization = (expectUser, permission) => async (req, res, next) => {
   try {
     const { authorization } = req.headers;
 
@@ -23,23 +25,37 @@ const verifyAuthorization = (permission) => async (req, res, next) => {
         .json({ error: 'Acesso negado. Token Inválido.' });
     }
 
-    const { id, permissions } = jwt.verify(token, config.JWT.secret);
+    const { id, from, permissions } = jwt.verify(token, config.JWT.secret);
 
-    const user = await userService.getJustUserById(id);
+    if (expectUser && from !== expectUser) {
+      return res
+        .status(StatusCodes.LOCKED)
+        .json({ error: 'Não permitido ao seu tipo de usuário.' });
+    }
 
-    if (!user) {
+    if (expectUser === WHO_USER) {
+      if (permission && !permissions?.includes(permission)) {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          error: 'Seu usuário não tem permissão para executar essa operação.',
+        });
+      }
+    }
+
+    let loggedAccount = null;
+
+    if (from === WHO_USER) loggedAccount = await userService.getJustUserById(id);
+    else if (from === WHO_PATIENT) loggedAccount = await patientService.getJustPacientById(id);
+
+    if (!loggedAccount) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: 'Usuário não encontrado' });
+        .json({ error: 'Conta não encontrada' });
     }
 
-    if (permission && !permissions?.includes(permission)) {
-      return res.status(StatusCodes.FORBIDDEN).json({
-        error: 'Seu usuário não tem permissão para executar essa operação.',
-      });
-    }
-
-    req.user = user;
+    req.logged = {
+      loggedAccount,
+      who: from,
+    };
 
     return next();
   } catch (error) {

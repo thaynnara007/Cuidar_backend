@@ -40,6 +40,16 @@ const getByUserId = async (userId) => {
   return address;
 };
 
+const getByPatientId = async (patientId) => {
+  const address = await Address.findOne({
+    where: {
+      patientId,
+    },
+  });
+
+  return address;
+};
+
 const edit = async (userId, addressData) => {
   await Address.update(addressData, {
     where: {
@@ -48,6 +58,16 @@ const edit = async (userId, addressData) => {
   });
 
   return getByUserId(userId);
+};
+
+const editByPatient = async (patientId, addressData) => {
+  await Address.update(addressData, {
+    where: {
+      patientId,
+    },
+  });
+
+  return getByPatientId(patientId);
 };
 
 const deleteByUserId = async (userId) => {
@@ -63,5 +83,6 @@ module.exports = {
   getAll,
   getByUserId,
   edit,
+  editByPatient,
   deleteByUserId,
 };

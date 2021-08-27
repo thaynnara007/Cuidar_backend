@@ -1,6 +1,9 @@
 /* eslint no-param-reassign: "error" */
 
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../../config/environment');
+const { WHO_PATIENT } = require('../util/constants');
 
 module.exports = (sequelize, DataTypes) => {
   const Patient = sequelize.define(
@@ -12,6 +15,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
+      },
+      cpfFormatted: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.cpf?.replace(
+            /(\d{3})?(\d{3})?(\d{3})?(\d{2})/,
+            '$1.$2.$3-$4',
+          );
+        },
       },
       birthday: DataTypes.DATE,
       phoneNumber: DataTypes.STRING,
@@ -36,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   );
+
   Patient.associate = (models) => {
     Patient.hasOne(models.Address, {
       foreignKey: 'patientId',
@@ -48,5 +61,29 @@ module.exports = (sequelize, DataTypes) => {
 
     return patient;
   });
+  Patient.prototype.checkPassword = function checkPassword(password) {
+    return bcrypt.compare(password, this.passwordHash);
+  };
+
+  Patient.prototype.checkForgetPasswordCode = function checkForgetPasswordCode(
+    code,
+  ) {
+    return bcrypt.compare(code, this.forgetPasswordCode);
+  };
+
+  Patient.prototype.generateAuthToken = function generateAuthToken(
+    forgetPassword = false,
+  ) {
+    const { secret, expirationMinutes } = config.JWT;
+
+    if (forgetPassword) {
+      return jwt.sign({ id: this.id, from: WHO_PATIENT }, secret, {
+        expiresIn: `${expirationMinutes}m`,
+      });
+    }
+
+    return jwt.sign({ id: this.id, from: WHO_PATIENT }, secret);
+  };
+
   return Patient;
 };

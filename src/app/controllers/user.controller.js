@@ -94,7 +94,7 @@ const getById = async (req, res) => {
 
 const getByMe = async (req, res) => {
   try {
-    const { id } = req.user;
+    const { id } = req.logged.loggedAccount;
 
     log.info(`Iniciando busca por usuário logado. userId = ${id}`);
 
@@ -203,7 +203,7 @@ const edit = async (req, res) => {
 
 const editMe = async (req, res) => {
   try {
-    const { id } = req.user;
+    const { id } = req.logged.loggedAccount;
     const { user, address } = req.body;
 
     log.info(`Iniciando atualização do usuário logado. userId = ${id}`);
@@ -318,7 +318,7 @@ const forgetPassword = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { user } = req;
+    const user = req.logged.loggedAccount;
     const { newPassword } = req.body;
 
     log.info(`Iniciando atualização de senha. userEmail=${user.email}`);

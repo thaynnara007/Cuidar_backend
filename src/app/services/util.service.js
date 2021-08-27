@@ -134,6 +134,7 @@ const FORGET_PASSWORD_CODE_MAX = 10000;
 const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 
 const normalizeQuery = (query) => query.replace(/\+/g, ' ');
+const normalizeNumber = (query) => query.replace(/[^0-9]/g, '');
 
 const getRandomNumber = (
   min = FORGET_PASSWORD_CODE_MIN,
@@ -152,6 +153,7 @@ module.exports = {
   transformUnit,
   capitalizeFirstLetter,
   normalizeQuery,
+  normalizeNumber,
   getRandomNumber,
   DATE_FORMAT,
 };
