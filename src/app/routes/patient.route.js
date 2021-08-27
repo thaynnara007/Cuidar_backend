@@ -31,6 +31,11 @@ router.get(
 );
 
 router.put('/me', auth.verifyAuthorization(WHO_PATIENT), controller.edit);
+router.put(
+  '/changePassword',
+  auth.verifyAuthorization(WHO_PATIENT),
+  controller.changePassword,
+);
 
 router.delete(
   '/:id',

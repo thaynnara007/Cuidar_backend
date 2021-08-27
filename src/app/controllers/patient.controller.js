@@ -304,6 +304,28 @@ const forgetPassword = async (req, res) => {
   }
 };
 
+const changePassword = async (req, res) => {
+  try {
+    const patient = req.logged.loggedAccount;
+    const { newPassword } = req.body;
+
+    log.info(`Iniciando atualização de senha. patientEmail=${patient.email}`);
+
+    await service.changePassword(patient, newPassword);
+
+    log.info('Senha atualizada');
+    return res.status(StatusCodes.OK).json('Senha atualizada');
+  } catch (error) {
+    const errorMsg = 'Erro ao mudar senha.';
+
+    log.error(errorMsg, 'app/controllers/patient.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
 module.exports = {
   create,
   getById,
@@ -312,4 +334,5 @@ module.exports = {
   edit,
   remove,
   forgetPassword,
+  changePassword,
 };

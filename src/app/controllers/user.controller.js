@@ -318,7 +318,7 @@ const forgetPassword = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const { user } = req;
+    const user = req.logged.loggedAccount;
     const { newPassword } = req.body;
 
     log.info(`Iniciando atualização de senha. userEmail=${user.email}`);
