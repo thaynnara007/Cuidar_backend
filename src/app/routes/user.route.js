@@ -5,45 +5,46 @@ const {
   CREATE_USER_PERMISSION,
   GET_USER_PERMISSION,
   DELETE_USER_PERMISSION,
+  WHO_USER,
 } = require('../util/constants');
 
 const router = express.Router();
 
 router.post(
   '/',
-  auth.verifyAuthorization(CREATE_USER_PERMISSION),
-  controller.create
+  auth.verifyAuthorization(WHO_USER, CREATE_USER_PERMISSION),
+  controller.create,
 );
 router.post('/forgetPassword', controller.forgetPassword);
 
-router.get('/me', auth.verifyAuthorization(), controller.getByMe);
+router.get('/me', auth.verifyAuthorization(WHO_USER), controller.getByMe);
 router.get(
   '/:id',
-  auth.verifyAuthorization(GET_USER_PERMISSION),
-  controller.getById
+  auth.verifyAuthorization(WHO_USER, GET_USER_PERMISSION),
+  controller.getById,
 );
 router.get(
   '/',
-  auth.verifyAuthorization(GET_USER_PERMISSION),
-  controller.getAll
+  auth.verifyAuthorization(WHO_USER, GET_USER_PERMISSION),
+  controller.getAll,
 );
 
 router.put(
   '/changePassword',
-  auth.verifyAuthorization(),
-  controller.changePassword
+  auth.verifyAuthorization(WHO_USER),
+  controller.changePassword,
 );
-router.put('/me', auth.verifyAuthorization(), controller.editMe);
+router.put('/me', auth.verifyAuthorization(WHO_USER), controller.editMe);
 router.put(
   '/:id',
-  auth.verifyAuthorization(CREATE_USER_PERMISSION),
-  controller.edit
+  auth.verifyAuthorization(WHO_USER, CREATE_USER_PERMISSION),
+  controller.edit,
 );
 
 router.delete(
   '/:id',
-  auth.verifyAuthorization(DELETE_USER_PERMISSION),
-  controller.delet
+  auth.verifyAuthorization(WHO_USER, DELETE_USER_PERMISSION),
+  controller.delet,
 );
 
 module.exports = router;

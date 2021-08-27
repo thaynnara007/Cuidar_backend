@@ -1,4 +1,4 @@
-const { User, Permission } = require('../models');
+const { User, Patient, Permission } = require('../models');
 
 const login = async (email, password) => {
   const user = await User.findOne({
@@ -33,6 +33,30 @@ const login = async (email, password) => {
   };
 };
 
+const loginPatient = async (email, password) => {
+  const patient = await Patient.findOne({
+    where: {
+      email,
+    },
+    attributes: {
+      include: 'passwordHash',
+    },
+  });
+
+  if (!patient) return null;
+
+  const validPassword = await patient.checkPassword(password);
+
+  if (!validPassword) return null;
+
+  delete patient.dataValues.passwordHash;
+
+  return {
+    token: patient.generateAuthToken(false),
+    patient,
+  };
+};
+
 const verifyForgetPasswordCode = async (email, code) => {
   const user = await User.findOne({
     where: {
@@ -56,5 +80,6 @@ const verifyForgetPasswordCode = async (email, code) => {
 
 module.exports = {
   login,
+  loginPatient,
   verifyForgetPasswordCode,
 };

@@ -6,6 +6,9 @@ const CREATE_PATIENT_PERMISSION = 'criar paciente';
 const GET_PATIENT_PERMISSION = 'ler paciente';
 const DELETE_PATIENT_PERMISSION = 'remover paciente';
 
+const WHO_USER = 'USER';
+const WHO_PATIENT = 'PATIENT';
+
 module.exports = {
   DATE_FORMAT,
   CREATE_USER_PERMISSION,
@@ -14,4 +17,6 @@ module.exports = {
   CREATE_PATIENT_PERMISSION,
   GET_PATIENT_PERMISSION,
   DELETE_PATIENT_PERMISSION,
+  WHO_USER,
+  WHO_PATIENT,
 };

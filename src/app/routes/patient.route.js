@@ -5,31 +5,33 @@ const {
   CREATE_PATIENT_PERMISSION,
   GET_PATIENT_PERMISSION,
   DELETE_PATIENT_PERMISSION,
+  WHO_PATIENT,
+  WHO_USER,
 } = require('../util/constants');
 
 const router = express.Router();
 
 router.post(
   '/',
-  auth.verifyAuthorization(CREATE_PATIENT_PERMISSION),
-  controller.create
+  auth.verifyAuthorization(WHO_USER, CREATE_PATIENT_PERMISSION),
+  controller.create,
 );
 router.get(
   '/',
-  auth.verifyAuthorization(GET_PATIENT_PERMISSION),
-  controller.getAll
+  auth.verifyAuthorization(WHO_USER, GET_PATIENT_PERMISSION),
+  controller.getAll,
 );
-router.get('/me', auth.verifyAuthorization(), controller.getByMe);
+router.get('/me', auth.verifyAuthorization(WHO_PATIENT), controller.getByMe);
 router.get(
   '/:id',
-  auth.verifyAuthorization(GET_PATIENT_PERMISSION),
-  controller.getById
+  auth.verifyAuthorization(WHO_USER, GET_PATIENT_PERMISSION),
+  controller.getById,
 );
-router.put('/me', auth.verifyAuthorization(), controller.edit);
+router.put('/me', auth.verifyAuthorization(WHO_PATIENT), controller.edit);
 router.delete(
   '/:id',
-  auth.verifyAuthorization(DELETE_PATIENT_PERMISSION),
-  controller.remove
+  auth.verifyAuthorization(WHO_USER, DELETE_PATIENT_PERMISSION),
+  controller.remove,
 );
 
 module.exports = router;
