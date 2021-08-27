@@ -113,8 +113,42 @@ const verifyCode = async (req, res) => {
   }
 };
 
+const verifyCodePatient = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    log.info(
+      `Iniciando processo de verificação de código de recuperação de senha. patient email = ${email}`,
+    );
+
+    const result = await service.verifyForgetPasswordCode(
+      email,
+      `${code}`,
+      true,
+    );
+
+    if (!result) {
+      return res
+        .status(StatusCodes.NOT_ACCEPTABLE)
+        .json({ error: 'Código inválido' });
+    }
+
+    log.info('Verificação finalizada');
+    return res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    const errorMsg = 'Erro ao validar código de recuperação de senha.';
+
+    log.error(errorMsg, 'app/controllers/auth.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
 module.exports = {
   login,
   loginPatient,
   verifyCode,
+  verifyCodePatient,
 };

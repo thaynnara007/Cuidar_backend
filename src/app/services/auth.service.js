@@ -57,24 +57,37 @@ const loginPatient = async (email, password) => {
   };
 };
 
-const verifyForgetPasswordCode = async (email, code) => {
-  const user = await User.findOne({
-    where: {
-      email,
-    },
-    attributes: {
-      include: 'forgetPasswordCode',
-    },
-  });
+const verifyForgetPasswordCode = async (email, code, patient = false) => {
+  let account = null;
 
-  if (!user) return null;
+  if (patient) {
+    account = await Patient.findOne({
+      where: {
+        email,
+      },
+      attributes: {
+        include: 'forgetPasswordCode',
+      },
+    });
+  } else {
+    account = await User.findOne({
+      where: {
+        email,
+      },
+      attributes: {
+        include: 'forgetPasswordCode',
+      },
+    });
+  }
 
-  const validCode = await user.checkForgetPasswordCode(code);
+  if (!account) return null;
+
+  const validCode = await account.checkForgetPasswordCode(code);
 
   if (!validCode) return null;
 
   return {
-    token: user.generateAuthToken(true),
+    token: account.generateAuthToken(true),
   };
 };
 

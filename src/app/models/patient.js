@@ -61,9 +61,14 @@ module.exports = (sequelize, DataTypes) => {
 
     return patient;
   });
-
   Patient.prototype.checkPassword = function checkPassword(password) {
     return bcrypt.compare(password, this.passwordHash);
+  };
+
+  Patient.prototype.checkForgetPasswordCode = function checkForgetPasswordCode(
+    code,
+  ) {
+    return bcrypt.compare(code, this.forgetPasswordCode);
   };
 
   Patient.prototype.generateAuthToken = function generateAuthToken(
