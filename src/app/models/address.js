@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       city: DataTypes.STRING,
       state: DataTypes.STRING,
     },
-    {}
+    {},
   );
   Address.associate = (models) => {
     Address.belongsTo(models.User, {

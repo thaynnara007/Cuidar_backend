@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: DataTypes.STRING,
     },
-    {}
+    {},
   );
   Permission.associate = (models) => {
     Permission.belongsToMany(models.User, {

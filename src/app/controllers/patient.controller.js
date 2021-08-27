@@ -2,6 +2,7 @@ const httpStatus = require('http-status-codes');
 const log = require('../services/log.service');
 const service = require('../services/patient.service');
 const addressService = require('../services/address.service');
+const emailService = require('../services/email.service');
 const util = require('../services/util.service');
 
 const { StatusCodes } = httpStatus;
@@ -265,6 +266,44 @@ const remove = async (req, res) => {
   }
 };
 
+const forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    log.info(
+      `Inicializando processo de recuperação de senha. patient email = ${email}`,
+    );
+    log.info('Buscando usuário por email');
+
+    const patient = await service.getByEmail(email);
+
+    if (patient) {
+      const code = util.getRandomNumber();
+
+      log.info('Salvando codigo de recuperação');
+      await service.saveForgetPasswordCode(patient.id, code);
+
+      log.info('Enviando codigo por email');
+      emailService.sendForgetPasswordEmail(email, code);
+    }
+
+    log.info('Finalizando processo de recuperação de senha.');
+    return res
+      .status(StatusCodes.OK)
+      .json(
+        'Se seu email tiver sido cadastrado em nossa plataforma, você receberá um email de recuperação de senha.',
+      );
+  } catch (error) {
+    const errorMsg = 'Erro enviar email de recuperação de senha';
+
+    log.error(errorMsg, 'app/controllers/patient.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+};
+
 module.exports = {
   create,
   getById,
@@ -272,4 +311,5 @@ module.exports = {
   getAll,
   edit,
   remove,
+  forgetPassword,
 };

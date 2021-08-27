@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const { Patient, Address } = require('../models');
 
 const create = (data) => Patient.create(data);
@@ -61,8 +62,22 @@ const changePassword = (patient, newPassword) => {
 
   updatedPatient.password = newPassword;
   updatedPatient.forgetPasswordCode = null;
+  updatedPatient.firstLogin = false;
 
   return updatedPatient.save();
+};
+
+const saveForgetPasswordCode = async (id, code) => {
+  const codeHash = await bcrypt.hash(`${code}`, 5);
+  const data = {
+    forgetPasswordCode: codeHash,
+  };
+
+  await Patient.update(data, {
+    where: {
+      id,
+    },
+  });
 };
 
 const delet = (patient) => patient.destroy();
@@ -76,5 +91,6 @@ module.exports = {
   getAll,
   update,
   changePassword,
+  saveForgetPasswordCode,
   delet,
 };

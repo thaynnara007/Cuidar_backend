@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       cpfFormatted: {
         type: DataTypes.VIRTUAL,
         get() {
-          return this.cpf.replace(
+          return this.cpf?.replace(
             /(\d{3})?(\d{3})?(\d{3})?(\d{2})/,
             '$1.$2.$3-$4',
           );

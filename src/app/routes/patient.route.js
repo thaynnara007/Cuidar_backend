@@ -16,6 +16,8 @@ router.post(
   auth.verifyAuthorization(WHO_USER, CREATE_PATIENT_PERMISSION),
   controller.create,
 );
+router.post('/forgetPassword', controller.forgetPassword);
+
 router.get(
   '/',
   auth.verifyAuthorization(WHO_USER, GET_PATIENT_PERMISSION),
@@ -27,7 +29,9 @@ router.get(
   auth.verifyAuthorization(WHO_USER, GET_PATIENT_PERMISSION),
   controller.getById,
 );
+
 router.put('/me', auth.verifyAuthorization(WHO_PATIENT), controller.edit);
+
 router.delete(
   '/:id',
   auth.verifyAuthorization(WHO_USER, DELETE_PATIENT_PERMISSION),

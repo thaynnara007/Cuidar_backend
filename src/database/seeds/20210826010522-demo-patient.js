@@ -50,23 +50,21 @@ module.exports = {
             email: patient.email,
           },
         },
-        ['id']
+        ['id'],
       );
 
-      if (!existedPatient || existedPatient.length === 0)
-        await queryInterface.bulkInsert('Patients', [patient], {});
+      if (!existedPatient || existedPatient.length === 0) await queryInterface.bulkInsert('Patients', [patient], {});
       else console.log(`paciente com o email '${patient.email}' já existe`);
     }
   },
 
-  down: (queryInterface) =>
-    queryInterface.bulkDelete(
-      'Patients',
-      {
-        email: {
-          [Op.in]: ['luffy@email.com', 'chopper@gmail.com', 'robin@gmail.com'],
-        },
+  down: (queryInterface) => queryInterface.bulkDelete(
+    'Patients',
+    {
+      email: {
+        [Op.in]: ['luffy@email.com', 'chopper@gmail.com', 'robin@gmail.com'],
       },
-      {}
-    ),
+    },
+    {},
+  ),
 };

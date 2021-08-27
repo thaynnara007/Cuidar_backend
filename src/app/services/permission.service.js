@@ -4,12 +4,11 @@ const create = async (data) => Permission.create(data);
 
 const getById = async (id) => Permission.findByPk(id);
 
-const getByName = async (name) =>
-  Permission.findOne({
-    where: {
-      name,
-    },
-  });
+const getByName = async (name) => Permission.findOne({
+  where: {
+    name,
+  },
+});
 
 const getAll = async (query) => {
   const page = parseInt(query.page, 10);
@@ -35,12 +34,11 @@ const getAll = async (query) => {
   return permissions;
 };
 
-const edit = async (id, data) =>
-  Permission.update(data, {
-    where: {
-      id,
-    },
-  });
+const edit = async (id, data) => Permission.update(data, {
+  where: {
+    id,
+  },
+});
 
 const delet = async (permission) => permission.destroy();
 
