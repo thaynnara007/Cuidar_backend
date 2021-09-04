@@ -186,7 +186,7 @@ const edit = async (req, res) => {
       const birthday = new Date(patient.birthday);
 
       if (Number.isNaN(birthday.getTime())) {
-        res.status(StatusCodes.BAD_REQUEST).json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
           error: 'Formato de data inválida',
         });
       }

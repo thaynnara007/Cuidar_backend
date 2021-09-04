@@ -68,7 +68,11 @@ module.exports = (sequelize, DataTypes) => {
   Patient.prototype.checkForgetPasswordCode = function checkForgetPasswordCode(
     code,
   ) {
-    return bcrypt.compare(code, this.forgetPasswordCode);
+    const validated = this.forgetPasswordCode
+      ? bcrypt.compare(code, this.forgetPasswordCode)
+      : false;
+
+    return validated;
   };
 
   Patient.prototype.generateAuthToken = function generateAuthToken(

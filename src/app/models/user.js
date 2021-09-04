@@ -59,7 +59,11 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.checkForgetPasswordCode = function checkForgetPasswordCode(
     code,
   ) {
-    return bcrypt.compare(code, this.forgetPasswordCode);
+    const validated = this.forgetPasswordCode
+      ? bcrypt.compare(code, this.forgetPasswordCode)
+      : false;
+
+    return validated;
   };
 
   User.prototype.generateAuthToken = function generateAuthToken(
