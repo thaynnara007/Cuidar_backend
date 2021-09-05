@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Category = sequelize.define(
-    'Category',
+  const Activity = sequelize.define(
+    'Activity',
     {
       name: {
         type: DataTypes.STRING,
@@ -13,11 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {},
   );
-  Category.associate = (models) => {
-    Category.hasMany(models.Activity, {
+  Activity.associate = (models) => {
+    Activity.belongsTo(models.Category, {
       foreignKey: 'categoryId',
-      as: 'activities',
+      as: 'category',
+      onDelete: 'CASCADE',
     });
   };
-  return Category;
+  return Activity;
 };
