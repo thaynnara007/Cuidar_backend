@@ -19,6 +19,11 @@ module.exports = (sequelize, DataTypes) => {
       as: 'category',
       onDelete: 'CASCADE',
     });
+    Activity.hasMany(models.Step, {
+      foreignKey: 'activityId',
+      as: 'steps',
+      onDelete: 'CASCADE',
+    });
   };
   return Activity;
 };
