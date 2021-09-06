@@ -8,6 +8,7 @@ const categories = [
     description: 'Aqui você encontra alimentos sólidos, líquidos e pastosos.',
     pageDescription: 'Aqui você pode escolher qual o alimento será utilizado!',
     icon: 'PLATE',
+    color: '#FFDF01',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -16,6 +17,7 @@ const categories = [
     description: 'Você pode escolher entre a higiene do corpo ou dos dentes.',
     pageDescription: 'Aqui você pode escolher qual parte será higienizada!',
     icon: 'HYGIENE',
+    color: '#E5007E',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -25,6 +27,7 @@ const categories = [
     pageDescription:
       'Aqui você pode escolher qual peça de roupa será utilizada',
     icon: 'HANGER',
+    color: '#37AAE3',
     createdAt: new Date(),
     updatedAt: new Date(),
   },

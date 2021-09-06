@@ -9,7 +9,7 @@ const activities = [
     pageDescription:
       'Aqui você irá praticar estímulos motores, sensoriais e também corporais.',
     icon: 'APPLE',
-    categoryId: 2,
+    categoryId: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -19,7 +19,7 @@ const activities = [
     pageDescription:
       'Esta atividade é responsável por estímulos motores, sensoriais e também corporais.',
     icon: 'SOUP',
-    categoryId: 2,
+    categoryId: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -30,7 +30,7 @@ const activities = [
     pageDescription:
       'Esta atividade é responsável por estímulos motores, sensoriais e também corporais.',
     icon: 'DRINK',
-    categoryId: 2,
+    categoryId: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -41,7 +41,7 @@ const activities = [
     pageDescription:
       'Nesta atividade será trabalhado os estímulos motores, sensoriais, como também tatéis!',
     icon: 'BODY',
-    categoryId: 3,
+    categoryId: 2,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -52,7 +52,7 @@ const activities = [
     pageDescription:
       'Nesta atividade será trabalhado os estímulos motores, sensoriais, como também tatéis!',
     icon: 'TOOTH',
-    categoryId: 3,
+    categoryId: 2,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -63,7 +63,7 @@ const activities = [
     pageDescription:
       'Esta atividade fica responsável por estímulos motores, sensoriais e também tatéis!',
     icon: 'SHIRT',
-    categoryId: 4,
+    categoryId: 3,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -74,7 +74,7 @@ const activities = [
     pageDescription:
       'Esta atividade fica responsável por estímulos motores, sensoriais e também tatéis!',
     icon: 'PANTS',
-    categoryId: 4,
+    categoryId: 3,
     createdAt: new Date(),
     updatedAt: new Date(),
   },

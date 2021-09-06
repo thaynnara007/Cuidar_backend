@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.TEXT,
       pageDescription: DataTypes.TEXT,
       icon: DataTypes.STRING,
+      color: DataTypes.STRING,
     },
     {},
   );
