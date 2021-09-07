@@ -44,7 +44,36 @@ const create = async (req, res) => {
   }
 }
 
-const getById = async(req, res) => {}
+const getById = async(req, res) => {
+  try {
+    const { id } = req.params
+
+    log.info(`Iniciando busca pela categoria de id ${id}`)
+
+    const result = await service.getById(id)
+
+    if (!result){
+      return res.status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Categoria não encontrada'})
+    }
+
+    log.info(`Finalizando busca pela categoria.`)
+    return res.status(StatusCodes.OK).json(result)
+
+  } catch (error) {
+    const errorMsg = 'Erro ao buscar categoria por id';
+
+    log.error(
+      errorMsg,
+      'app/controllers/category.controller.js',
+      error.message,
+    );
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+}
 
 const  getAll = async(req, res) => {}
 

@@ -1,10 +1,15 @@
-const { Category } = require('../models')
+const { Category, Activity } = require('../models')
 
 const create = (data) => Category.create(data)
 
 const getByName = (name) => Category.findOne({ where: { name }})
 
-const getById = async(id) => {}
+const getById = (id) => Category.findByPk(id, {
+  include: {
+    model: Activity,
+    as: 'activities'
+  }
+})
 
 const  getAll = async(query) => {}
 
