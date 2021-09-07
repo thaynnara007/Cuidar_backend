@@ -33,7 +33,7 @@ const verifyAuthorization = (expectUser, permission) => async (req, res, next) =
         .json({ error: 'Não permitido ao seu tipo de usuário.' });
     }
 
-    if (expectUser === WHO_USER) {
+    if (expectUser && expectUser === WHO_USER) {
       if (permission && !permissions?.includes(permission)) {
         return res.status(StatusCodes.FORBIDDEN).json({
           error: 'Seu usuário não tem permissão para executar essa operação.',

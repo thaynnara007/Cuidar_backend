@@ -2,7 +2,7 @@ const { FIREBASE } = require('../../config/environment');
 
 module.exports = (sequelize, DataTypes) => {
   const Image = sequelize.define(
-    'PosterPicture',
+    'Image',
     {
       image_name: {
         type: DataTypes.STRING,
@@ -31,5 +31,6 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
   };
+
   return Image;
 };
