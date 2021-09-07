@@ -1,6 +1,8 @@
 const { Category } = require('../models')
 
-const create = async (data) => {}
+const create = (data) => Category.create(data)
+
+const getByName = (name) => Category.findOne({ where: { name }})
 
 const getById = async(id) => {}
 
@@ -12,6 +14,7 @@ const remove = async(category) => {}
 
 module.exports = {
   create,
+  getByName,
   getById,
   getAll,
   edit,
