@@ -9,6 +9,8 @@ const DELETE_PATIENT_PERMISSION = 'remover paciente';
 const WHO_USER = 'USER';
 const WHO_PATIENT = 'PATIENT';
 
+const FIVE_MB = 5 * 1024 * 1024;
+
 module.exports = {
   DATE_FORMAT,
   CREATE_USER_PERMISSION,
@@ -19,4 +21,5 @@ module.exports = {
   DELETE_PATIENT_PERMISSION,
   WHO_USER,
   WHO_PATIENT,
+  FIVE_MB,
 };
