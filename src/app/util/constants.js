@@ -5,6 +5,8 @@ const DELETE_USER_PERMISSION = 'remover usuário';
 const CREATE_PATIENT_PERMISSION = 'criar paciente';
 const GET_PATIENT_PERMISSION = 'ler paciente';
 const DELETE_PATIENT_PERMISSION = 'remover paciente';
+const CREATE_ACTIVITY_PERMISSION = 'criar atividade';
+const DELETE_ACTIVITY_PERMISSION = 'remover atividade';
 
 const WHO_USER = 'USER';
 const WHO_PATIENT = 'PATIENT';
@@ -19,6 +21,8 @@ module.exports = {
   CREATE_PATIENT_PERMISSION,
   GET_PATIENT_PERMISSION,
   DELETE_PATIENT_PERMISSION,
+  CREATE_ACTIVITY_PERMISSION,
+  DELETE_ACTIVITY_PERMISSION,
   WHO_USER,
   WHO_PATIENT,
   FIVE_MB,
