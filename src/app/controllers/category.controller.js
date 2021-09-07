@@ -15,7 +15,7 @@ const create = async (req, res) => {
         .json({ error: "Os campos nome e descrição precisam ser preenchidos"})
     }
 
-    log.info(`Validando se uma categoria de mesmo noma já existe`)
+    log.info(`Validando se uma categoria de mesmo nome já existe`)
     const existedCategory = await service.getByName(name)
 
     if (existedCategory){
@@ -75,9 +75,70 @@ const getById = async(req, res) => {
   }
 }
 
-const  getAll = async(req, res) => {}
+const getAll = async(req, res) => {
+  try {
+    log.info(`Iniciando busca por categorias`)
+    const result = await service.getAll(req.query)
 
-const edit = async(req, res) => {}
+    log.info(`Finalizando busca por categorias`)
+    return res.status(StatusCodes.OK).json(result)
+    
+  } catch (error) {
+    const errorMsg = 'Erro ao buscar categorias';
+
+    log.error(
+      errorMsg,
+      'app/controllers/category.controller.js',
+      error.message,
+    );
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+}
+
+const edit = async(req, res) => {
+  try {
+    const { id } = req.params
+    const { name } = req.body
+
+    const category = await service.getJustCategory(id)
+
+    if (!category){
+      return res.status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Categoria não encontrada' })
+    }
+
+    if(name) {
+      log.info(`Validando se uma categoria de mesmo nome já existe`)
+      const existedCategory = await service.getByName(name)
+
+      if (existedCategory && `${existedCategory.id}` !== id){
+        return res.status(StatusCodes.CONFLICT)
+          .json({ error: "Uma categoria de mesmo nome já existe"})
+      }
+    }
+
+    log.info(`Atualizando categoria`)
+    const result = await service.edit(id, req.body)
+
+    log.info(`Finalizando atualização da categoria`)
+    return res.status(StatusCodes.OK).json(result)
+  } catch (error) {
+    const errorMsg = 'Erro ao atualizar categoria';
+
+    log.error(
+      errorMsg,
+      'app/controllers/category.controller.js',
+      error.message,
+    );
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+}
 
 const remove = async(req, res) => {}
 
