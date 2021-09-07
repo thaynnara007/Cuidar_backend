@@ -1,19 +1,19 @@
-const { Category, Activity } = require('../models')
+const { Category, Activity } = require('../models');
 
-const create = (data) => Category.create(data)
+const create = (data) => Category.create(data);
 
-const getByName = (name) => Category.findOne({ where: { name }})
+const getByName = (name) => Category.findOne({ where: { name } });
 
 const getById = (id) => Category.findByPk(id, {
   include: {
     model: Activity,
-    as: 'activities'
-  }
-})
+    as: 'activities',
+  },
+});
 
-const getJustCategory = (id) => Category.findByPk(id)
+const getJustCategory = (id) => Category.findByPk(id);
 
-const  getAll = async(query) => {
+const getAll = async (query) => {
   const page = parseInt(query.page, 10);
   const pageSize = parseInt(query.pageSize, 10);
   let offset = null;
@@ -33,21 +33,21 @@ const  getAll = async(query) => {
   } else {
     categories = await Category.findAll();
   }
-  
+
   return categories;
-}
+};
 
 const edit = async (id, data) => {
   await Category.update(data, {
     where: {
       id,
-      }  
-    })
-  
-  return getById(id)
-}
+    },
+  });
 
-const remove = async(category) => {}
+  return getById(id);
+};
+
+const remove = async (category) => category.destroy();
 
 module.exports = {
   create,
@@ -56,5 +56,5 @@ module.exports = {
   getJustCategory,
   getAll,
   edit,
-  remove
-}
+  remove,
+};
