@@ -121,37 +121,56 @@ const getAll = async (req, res) => {
 const edit = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
+    const { name, categoryId } = req.body;
 
-    log.info(`Iniciando atualizanção da categoria de id ${id}`);
-    log.info('Verificando se a categoria existe');
+    log.info(`Iniciando atualizanção da atividade de id ${id}`);
+    log.info('Verificando se a atividade existe');
 
-    const category = await service.getJustCategory(id);
+    const activity = await service.getJustActivity(id);
 
-    if (!category) {
+    if (!activity) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: 'Categoria não encontrada' });
+        .json({ error: 'atividade não encontrada' });
     }
 
-    if (name) {
-      log.info('Validando se uma categoria de mesmo nome já existe');
-      const existedCategory = await service.getByName(name);
+    if (categoryId) {
+      const category = await categoryService.getJustCategory(categoryId);
 
-      if (existedCategory && `${existedCategory.id}` !== id) {
+      if (!category) {
         return res
-          .status(StatusCodes.CONFLICT)
-          .json({ error: 'Uma categoria de mesmo nome já existe' });
+          .status(StatusCodes.NOT_FOUND)
+          .json({ error: 'Categoria não encontrada' });
       }
     }
 
-    log.info('Atualizando categoria');
+    if (name) {
+      log.info(
+        'Validando se uma atividade de mesmo nome já existe na mesma categoria',
+      );
+
+      const searchedCategoryId = categoryId ?? activity.categoryId;
+      const existedActivity = await service.getByNameAndCategory(
+        name,
+        searchedCategoryId,
+      );
+
+      if (existedActivity && `${existedActivity.id}` !== id) {
+        return res
+          .status(StatusCodes.CONFLICT)
+          .json({
+            error: 'Uma atividade mesmo nome já existe nessa categoria',
+          });
+      }
+    }
+
+    log.info('Atualizando atividade');
     const result = await service.edit(id, req.body);
 
-    log.info('Finalizando atualização da categoria');
+    log.info('Finalizando atualização da atividade');
     return res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    const errorMsg = 'Erro ao atualizar categoria';
+    const errorMsg = 'Erro ao atualizar atividade';
 
     log.error(
       errorMsg,

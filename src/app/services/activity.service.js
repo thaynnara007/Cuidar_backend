@@ -1,10 +1,13 @@
-const { Category, Activity, Step } = require('../models');
+const { Op } = require('sequelize');
+const { Activity, Step } = require('../models');
 
 const create = (data) => Activity.create(data);
 
 const getByNameAndCategory = (name, categoryId) => Activity.findOne({
   where: {
-    name,
+    name: {
+      [Op.iLike]: name,
+    },
     categoryId,
   },
 });
@@ -16,7 +19,7 @@ const getById = (id) => Activity.findByPk(id, {
   },
 });
 
-const getJustCategory = (id) => Category.findByPk(id);
+const getJustActivity = (id) => Activity.findByPk(id);
 
 const getAll = async (query) => {
   const page = parseInt(query.page, 10);
@@ -43,7 +46,7 @@ const getAll = async (query) => {
 };
 
 const edit = async (id, data) => {
-  await Category.update(data, {
+  await Activity.update(data, {
     where: {
       id,
     },
@@ -58,7 +61,7 @@ module.exports = {
   create,
   getByNameAndCategory,
   getById,
-  getJustCategory,
+  getJustActivity,
   getAll,
   edit,
   remove,
