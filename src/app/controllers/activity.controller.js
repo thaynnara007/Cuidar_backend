@@ -18,11 +18,9 @@ const create = async (req, res) => {
     }
 
     if (!categoryId) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({
-          error: 'A atividade precisa estar associada a alguma categoria',
-        });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'A atividade precisa estar associada a alguma categoria',
+      });
     }
 
     const category = await categoryService.getJustCategory(categoryId);
@@ -42,11 +40,9 @@ const create = async (req, res) => {
     );
 
     if (existedActivity) {
-      return res
-        .status(StatusCodes.CONFLICT)
-        .json({
-          error: 'Uma atividade de mesmo nome já existe nessa categoria',
-        });
+      return res.status(StatusCodes.CONFLICT).json({
+        error: 'Uma atividade de mesmo nome já existe nessa categoria',
+      });
     }
 
     log.info('Criando atividade');
@@ -73,24 +69,24 @@ const getById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    log.info(`Iniciando busca pela categoria de id ${id}`);
+    log.info(`Iniciando busca pela atividade de id ${id}`);
 
     const result = await service.getById(id);
 
     if (!result) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: 'Categoria não encontrada' });
+        .json({ error: 'Atividade não encontrada' });
     }
 
-    log.info('Finalizando busca pela categoria.');
+    log.info('Finalizando busca pela atividade.');
     return res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    const errorMsg = 'Erro ao buscar categoria por id';
+    const errorMsg = 'Erro ao buscar atividade por id';
 
     log.error(
       errorMsg,
-      'app/controllers/category.controller.js',
+      'app/controllers/activity.controller.js',
       error.message,
     );
 
@@ -112,7 +108,7 @@ const getAll = async (req, res) => {
 
     log.error(
       errorMsg,
-      'app/controllers/category.controller.js',
+      'app/controllers/activity.controller.js',
       error.message,
     );
 
@@ -159,7 +155,7 @@ const edit = async (req, res) => {
 
     log.error(
       errorMsg,
-      'app/controllers/category.controller.js',
+      'app/controllers/activity.controller.js',
       error.message,
     );
 
@@ -194,7 +190,7 @@ const remove = async (req, res) => {
 
     log.error(
       errorMsg,
-      'app/controllers/category.controller.js',
+      'app/controllers/activity.controller.js',
       error.message,
     );
 

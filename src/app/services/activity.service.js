@@ -1,4 +1,4 @@
-const { Category, Activity } = require('../models');
+const { Category, Activity, Step } = require('../models');
 
 const create = (data) => Activity.create(data);
 
@@ -9,10 +9,10 @@ const getByNameAndCategory = (name, categoryId) => Activity.findOne({
   },
 });
 
-const getById = (id) => Category.findByPk(id, {
+const getById = (id) => Activity.findByPk(id, {
   include: {
-    model: Activity,
-    as: 'activities',
+    model: Step,
+    as: 'steps',
   },
 });
 
