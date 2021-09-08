@@ -1,41 +1,65 @@
 const httpStatus = require('http-status-codes');
 const log = require('../services/log.service');
-const service = require('../services/category.service');
+const service = require('../services/activity.service');
+const categoryService = require('../services/category.service');
 
 const { StatusCodes } = httpStatus;
 
 const create = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, categoryId } = req.body;
 
-    log.info(`Iniciando criação da categoria ${name}`);
+    log.info(`Iniciando criação da atividade ${name}`);
 
-    if (!name || !description) {
+    if (!name) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Os campos nome e descrição precisam ser preenchidos' });
+        .json({ error: 'O campo nome precisa ser preenchidos' });
     }
 
-    log.info('Validando se uma categoria de mesmo nome já existe');
-    const existedCategory = await service.getByName(name);
+    if (!categoryId) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({
+          error: 'A atividade precisa estar associada a alguma categoria',
+        });
+    }
 
-    if (existedCategory) {
+    const category = await categoryService.getJustCategory(categoryId);
+
+    if (!category) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Categoria não encontrada' });
+    }
+
+    log.info(
+      'Validando se uma atividade de mesmo nome, para a mesma categoria, já existe',
+    );
+    const existedActivity = await service.getByNameAndCategory(
+      name,
+      categoryId,
+    );
+
+    if (existedActivity) {
       return res
         .status(StatusCodes.CONFLICT)
-        .json({ error: 'Uma categoria de mesmo nome já existe' });
+        .json({
+          error: 'Uma atividade de mesmo nome já existe nessa categoria',
+        });
     }
 
-    log.info('Criando categoria');
+    log.info('Criando atividade');
     const result = await service.create(req.body);
 
-    log.info('Finalizando criação da categoria');
+    log.info('Finalizando criação da atividade');
     return res.status(StatusCodes.CREATED).json(result);
   } catch (error) {
-    const errorMsg = 'Erro ao criar categoria';
+    const errorMsg = 'Erro ao criar atividade';
 
     log.error(
       errorMsg,
-      'app/controllers/category.controller.js',
+      'app/controllers/activity.controller.js',
       error.message,
     );
 

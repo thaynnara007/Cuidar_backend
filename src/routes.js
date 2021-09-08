@@ -4,7 +4,8 @@ const permission = require('./app/routes/permission.route');
 const auth = require('./app/routes/auth.route');
 const user = require('./app/routes/user.route');
 const patient = require('./app/routes/patient.route');
-const category = require('./app/routes/category.route')
+const category = require('./app/routes/category.route');
+const activity = require('./app/routes/activity.route');
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.use('/auth', auth);
 router.use('/user', user);
 router.use('/patient', patient);
 router.use('/category', category);
+router.use('/activity', activity);
 
 module.exports = router;
