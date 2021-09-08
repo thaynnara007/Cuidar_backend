@@ -98,13 +98,13 @@ const getById = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    log.info('Iniciando busca por categorias');
+    log.info('Iniciando busca pelas atividades');
     const result = await service.getAll(req.query);
 
-    log.info('Finalizando busca por categorias');
+    log.info('Finalizando busca pelas atividades');
     return res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    const errorMsg = 'Erro ao buscar categorias';
+    const errorMsg = 'Erro ao buscar atividades';
 
     log.error(
       errorMsg,

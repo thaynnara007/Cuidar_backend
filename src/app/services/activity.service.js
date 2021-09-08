@@ -22,7 +22,7 @@ const getAll = async (query) => {
   const page = parseInt(query.page, 10);
   const pageSize = parseInt(query.pageSize, 10);
   let offset = null;
-  let categories = null;
+  let activities = null;
 
   if (page && pageSize) offset = (page - 1) * pageSize;
 
@@ -32,14 +32,14 @@ const getAll = async (query) => {
       offset,
       distinct: true,
     };
-    categories = await Category.findAndCountAll(options);
+    activities = await Activity.findAndCountAll(options);
 
-    categories.pages = Math.ceil(categories.count / pageSize);
+    activities.pages = Math.ceil(activities.count / pageSize);
   } else {
-    categories = await Category.findAll();
+    activities = await Activity.findAll();
   }
 
-  return categories;
+  return activities;
 };
 
 const edit = async (id, data) => {
