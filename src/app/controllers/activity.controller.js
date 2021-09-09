@@ -156,11 +156,9 @@ const edit = async (req, res) => {
       );
 
       if (existedActivity && `${existedActivity.id}` !== id) {
-        return res
-          .status(StatusCodes.CONFLICT)
-          .json({
-            error: 'Uma atividade mesmo nome já existe nessa categoria',
-          });
+        return res.status(StatusCodes.CONFLICT).json({
+          error: 'Uma atividade mesmo nome já existe nessa categoria',
+        });
       }
     }
 
@@ -188,24 +186,24 @@ const remove = async (req, res) => {
   try {
     const { id } = req.params;
 
-    log.info(`Iniciando remoção da categoria de id ${id}`);
-    log.info('Verificando se a categoria existe');
+    log.info(`Iniciando remoção da atividade de id ${id}`);
+    log.info('Verificando se a atividade existe');
 
-    const category = await service.getJustCategory(id);
+    const activity = await service.getJustActivity(id);
 
-    if (!category) {
+    if (!activity) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: 'Categoria não encontrada' });
+        .json({ error: 'Atividade não encontrada' });
     }
 
-    log.info('Removendo categoria');
-    await service.remove(category);
+    log.info('Removendo atividade');
+    await service.remove(activity);
 
     log.info('Finalizando remoção');
-    return res.status(StatusCodes.OK).json('Categoria removida com sucesso.');
+    return res.status(StatusCodes.OK).json('Atividade removida com sucesso.');
   } catch (error) {
-    const errorMsg = 'Erro ao remover categoria';
+    const errorMsg = 'Erro ao remover atividade';
 
     log.error(
       errorMsg,

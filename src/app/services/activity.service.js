@@ -55,7 +55,7 @@ const edit = async (id, data) => {
   return getById(id);
 };
 
-const remove = async (category) => category.destroy();
+const remove = async (activity) => activity.destroy();
 
 module.exports = {
   create,
