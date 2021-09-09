@@ -73,7 +73,7 @@ const getById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    log.info(`Iniciando busca pela passo de id ${id}`);
+    log.info(`Iniciando busca pelo passo de id ${id}`);
 
     const result = await service.getById(id);
 
@@ -98,13 +98,15 @@ const getById = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    log.info('Iniciando busca pelas atividades');
-    const result = await service.getAll(req.query);
+    const { activityId } = req.params
 
-    log.info('Finalizando busca pelas atividades');
+    log.info('Iniciando busca pelos passos de uma atividade');
+    const result = await service.getAll(req.query, activityId);
+
+    log.info('Finalizando busca pelos passos');
     return res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    const errorMsg = 'Erro ao buscar atividades';
+    const errorMsg = 'Erro ao buscar passos';
 
     log.error(errorMsg, 'app/controllers/step.controller.js', error.message);
 

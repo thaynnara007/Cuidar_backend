@@ -29,11 +29,14 @@ const getById = (id) => Step.findByPk(id, {
 
 const getJustStep = (id) => Step.findByPk(id);
 
-const getAll = async (query) => {
+const getAll = async (query, activityId) => {
   const page = parseInt(query.page, 10);
   const pageSize = parseInt(query.pageSize, 10);
   let offset = null;
-  let activities = null;
+  let steps = null;
+  const where = {
+    activityId
+  }
 
   if (page && pageSize) offset = (page - 1) * pageSize;
 
@@ -42,15 +45,16 @@ const getAll = async (query) => {
       limit: pageSize,
       offset,
       distinct: true,
+      where,
     };
-    activities = await Activity.findAndCountAll(options);
+    steps = await Step.findAndCountAll(options);
 
-    activities.pages = Math.ceil(activities.count / pageSize);
+    steps.pages = Math.ceil(steps.count / pageSize);
   } else {
-    activities = await Activity.findAll();
+    steps = await Step.findAll({where});
   }
 
-  return activities;
+  return steps;
 };
 
 const edit = async (id, data) => {
