@@ -114,6 +114,58 @@ const getAll = async (req, res) => {
   }
 };
 
+const addImage = async(req, res) => {
+  try {
+    const { file } = req;
+    const { id } = req.params
+
+    log.info(
+      `Iniciando adição de imagem ao passo de id = ${id}`,
+    );
+    log.info(`Buscando o passo`);
+
+    const step = await service.getJustStep(id);
+
+    if (!step) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Passo não encontrado' });
+    }
+
+    const existedPicture = await imageService.getByStepId(id);
+
+    log.info(`Fazendo upload da imagem. file=${file}`);
+    const uploadPicture = await firebaseService.upload(file);
+
+    let picture = null;
+    if (!existedPicture) {
+      log.info('Criando imagem no banco de dados');
+      picture = await imageService.create(id, uploadPicture);
+    } else {
+      log.info('Atualizando imagem no banco de dados');
+      picture = await imageService.edit(id, uploadPicture);
+      firebaseService.delet(existedPicture.imageName)
+    }
+
+    log.info('Finalizando a adição de imagem');
+
+    const result = {
+      ...step.dataValues,
+      image: picture.pictureUrl,
+    };
+
+    return res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    const errorMsg = 'Erro ao adicionar imagem';
+
+    log.error(errorMsg, 'app/controllers/step.controller.js', error.message);
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg} ${error.message}` });
+  }
+}
+
 const edit = async (req, res) => {
   try {
     const { id } = req.params;
@@ -209,6 +261,7 @@ module.exports = {
   create,
   getById,
   getAll,
+  addImage,
   edit,
   remove,
 };

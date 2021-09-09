@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const Image = sequelize.define(
     'Image',
     {
-      image_name: {
+      imageName: {
         type: DataTypes.STRING,
         unique: true,
       },
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
           return `https://firebasestorage.googleapis.com/v0/b/${
             FIREBASE.storageBucket
           }/o/${this.getDataValue(
-            'image_name',
+            'imageName',
           )}?alt=media&token=${this.getDataValue('token')}`;
         },
       },

@@ -1,4 +1,3 @@
-const { Op } = require('sequelize');
 const { Activity, Step } = require('../models');
 
 const create = (data) => Step.create(data);
@@ -17,7 +16,7 @@ const getById = (id) => Activity.findByPk(id, {
   },
 });
 
-const getJustActivity = (id) => Activity.findByPk(id);
+const getJustStep = (id) => Step.findByPk(id);
 
 const getAll = async (query) => {
   const page = parseInt(query.page, 10);
@@ -59,7 +58,7 @@ module.exports = {
   create,
   getByNumberAndActivity,
   getById,
-  getJustActivity,
+  getJustStep,
   getAll,
   edit,
   remove,

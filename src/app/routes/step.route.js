@@ -14,11 +14,16 @@ const router = express.Router();
 router.post(
   '/',
   verifyAuthorization(WHO_USER, CREATE_ACTIVITY_PERMISSION),
-  multer.single('file'),
   controller.create,
 );
 router.get('/', verifyAuthorization(), controller.getAll);
 router.get('/:id', verifyAuthorization(), controller.getById);
+router.put(
+  '/:id/image',
+  verifyAuthorization(WHO_USER, CREATE_ACTIVITY_PERMISSION),
+  multer.single('file'),
+  controller.addImage,
+)
 router.put(
   '/:id',
   verifyAuthorization(WHO_USER, CREATE_ACTIVITY_PERMISSION),

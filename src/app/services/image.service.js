@@ -9,7 +9,7 @@ const getByStepId = (stepId) => Image.findOne({
 const create = async (stepId, { fileName, token }) => {
   const data = {
     stepId,
-    image_name: fileName,
+    imageName: fileName,
     token,
   };
 
@@ -18,7 +18,7 @@ const create = async (stepId, { fileName, token }) => {
   return picture;
 };
 
-const edit = async (posterId, { fileName, token }) => {
+const edit = async (stepId, { fileName, token }) => {
   const data = {
     imageName: fileName,
     token,
@@ -26,11 +26,11 @@ const edit = async (posterId, { fileName, token }) => {
 
   await Image.update(data, {
     where: {
-      posterId,
+      stepId,
     },
   });
 
-  return getByStepId(posterId);
+  return getByStepId(stepId);
 };
 
 const delet = (picture) => picture.destroy();
