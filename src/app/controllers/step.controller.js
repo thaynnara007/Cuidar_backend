@@ -9,20 +9,26 @@ const { StatusCodes } = httpStatus;
 
 const create = async (req, res) => {
   try {
-    const { name, description, number, activityId } = req.body;
+    const {
+      name, description, number, activityId,
+    } = req.body;
 
     log.info(`Iniciando criação do passo ${name}`);
 
     if (!name || !description || !number) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'Os campo nome, descrição e sequência precisa ser preenchidos' });
+        .json({
+          error: 'Os campo nome, descrição e sequência precisa ser preenchidos',
+        });
     }
 
     if (number < 0) {
       return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: 'O campo sequência precisa ser maior ou igual a zero.' });
+        .status(StatusCodes.BAD_REQUEST)
+        .json({
+          error: 'O campo sequência precisa ser maior ou igual a zero.',
+        });
     }
 
     if (!activityId) {
@@ -49,7 +55,8 @@ const create = async (req, res) => {
 
     if (existedStep) {
       return res.status(StatusCodes.CONFLICT).json({
-        error: 'Um passo com o mesmo número de sequência já existe para essa atividade',
+        error:
+          'Um passo com o mesmo número de sequência já existe para essa atividade',
       });
     }
 
@@ -98,7 +105,7 @@ const getById = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const { activityId } = req.params
+    const { activityId } = req.params;
 
     log.info('Iniciando busca pelos passos de uma atividade');
     const result = await service.getAll(req.query, activityId);
@@ -116,15 +123,13 @@ const getAll = async (req, res) => {
   }
 };
 
-const addImage = async(req, res) => {
+const addImage = async (req, res) => {
   try {
     const { file } = req;
-    const { id } = req.params
+    const { id } = req.params;
 
-    log.info(
-      `Iniciando adição de imagem ao passo de id = ${id}`,
-    );
-    log.info(`Buscando o passo`);
+    log.info(`Iniciando adição de imagem ao passo de id = ${id}`);
+    log.info('Buscando o passo');
 
     const step = await service.getJustStep(id);
 
@@ -146,7 +151,7 @@ const addImage = async(req, res) => {
     } else {
       log.info('Atualizando imagem no banco de dados');
       picture = await imageService.edit(id, uploadPicture);
-      firebaseService.delet(existedPicture.imageName)
+      firebaseService.delet(existedPicture.imageName);
     }
 
     log.info('Finalizando a adição de imagem');
@@ -166,57 +171,67 @@ const addImage = async(req, res) => {
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: `${errorMsg} ${error.message}` });
   }
-}
+};
 
 const edit = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, categoryId } = req.body;
+    const { number, activityId } = req.body;
 
-    log.info(`Iniciando atualizanção da atividade de id ${id}`);
-    log.info('Verificando se a atividade existe');
+    log.info(`Iniciando atualização do passo de id ${id}`);
 
-    const activity = await service.getJustActivity(id);
+    if (number && number < 0) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({
+          error: 'O campo sequência precisa ser maior ou igual a zero.',
+        });
+    }
+
+    const step = await service.getJustStep(id);
+
+    if (!step) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Passo não encontrado' });
+    }
+
+    if (!activityId) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'O passo precisa estar associado a alguma atividade',
+      });
+    }
+
+    const activity = await activityService.getJustActivity(activityId);
 
     if (!activity) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: 'atividade não encontrada' });
+        .json({ error: 'Atividade não encontrada' });
     }
 
-    if (categoryId) {
-      const category = await categoryService.getJustCategory(categoryId);
-
-      if (!category) {
-        return res
-          .status(StatusCodes.NOT_FOUND)
-          .json({ error: 'Categoria não encontrada' });
-      }
-    }
-
-    if (name) {
+    if (number) {
       log.info(
-        'Validando se uma atividade de mesmo nome já existe na mesma categoria',
+        'Validando se uma atividade de mesma sequência, para a mesma atividade, já existe',
+      );
+      const existedStep = await service.getByNumberAndActivity(
+        number,
+        activityId,
       );
 
-      const searchedCategoryId = categoryId ?? activity.categoryId;
-      const existedActivity = await service.getByNameAndCategory(
-        name,
-        searchedCategoryId,
-      );
-
-      if (existedActivity && `${existedActivity.id}` !== id) {
+      if (existedStep && `${existedStep.id}` !== id) {
         return res.status(StatusCodes.CONFLICT).json({
-          error: 'Uma atividade mesmo nome já existe nessa categoria',
+          error:
+            'Um passo com o mesmo número de sequência já existe para essa atividade',
         });
       }
     }
 
-    log.info('Atualizando atividade');
+    log.info('Atualizando passo');
     const result = await service.edit(id, req.body);
 
-    log.info('Finalizando atualização da atividade');
-    return res.status(StatusCodes.OK).json(result);
+    log.info('Finalizando atualização do passo');
+    return res.status(StatusCodes.CREATED).json(result);
   } catch (error) {
     const errorMsg = 'Erro ao atualizar atividade';
 

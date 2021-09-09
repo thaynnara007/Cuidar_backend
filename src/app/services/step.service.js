@@ -1,4 +1,6 @@
-const { Category, Activity, Step, Image } = require('../models');
+const {
+  Category, Activity, Step, Image,
+} = require('../models');
 
 const create = (data) => Step.create(data);
 
@@ -14,17 +16,17 @@ const getById = (id) => Step.findByPk(id, {
     {
       model: Image,
       as: 'image',
-      separete: true
+      separete: true,
     },
     {
       model: Activity,
       as: 'activity',
       include: {
         model: Category,
-        as: 'category'
-      }
+        as: 'category',
+      },
     },
-  ]
+  ],
 });
 
 const getJustStep = (id) => Step.findByPk(id);
@@ -35,8 +37,8 @@ const getAll = async (query, activityId) => {
   let offset = null;
   let steps = null;
   const where = {
-    activityId
-  }
+    activityId,
+  };
 
   if (page && pageSize) offset = (page - 1) * pageSize;
 
@@ -51,14 +53,14 @@ const getAll = async (query, activityId) => {
 
     steps.pages = Math.ceil(steps.count / pageSize);
   } else {
-    steps = await Step.findAll({where});
+    steps = await Step.findAll({ where });
   }
 
   return steps;
 };
 
 const edit = async (id, data) => {
-  await Activity.update(data, {
+  await Step.update(data, {
     where: {
       id,
     },
