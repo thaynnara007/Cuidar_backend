@@ -1,14 +1,12 @@
 const { Op } = require('sequelize');
 const { Activity, Step } = require('../models');
 
-const create = (data) => Activity.create(data);
+const create = (data) => Step.create(data);
 
-const getByNameAndCategory = (name, categoryId) => Activity.findOne({
+const getByNumberAndActivity = (number, activityId) => Step.findOne({
   where: {
-    name: {
-      [Op.iLike]: name,
-    },
-    categoryId,
+    number,
+    activityId,
   },
 });
 
@@ -59,7 +57,7 @@ const remove = async (activity) => activity.destroy();
 
 module.exports = {
   create,
-  getByNameAndCategory,
+  getByNumberAndActivity,
   getById,
   getJustActivity,
   getAll,

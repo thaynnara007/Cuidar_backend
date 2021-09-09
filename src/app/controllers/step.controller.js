@@ -1,54 +1,62 @@
 const httpStatus = require('http-status-codes');
 const log = require('../services/log.service');
 const service = require('../services/step.service');
-const categoryService = require('../services/category.service');
+const activityService = require('../services/activity.service');
+const firebaseService = require('../services/firebase.service');
+const imageService = require('../services/image.service');
 
 const { StatusCodes } = httpStatus;
 
 const create = async (req, res) => {
   try {
-    const { name, categoryId } = req.body;
+    const { name, description, number, activityId } = req.body;
 
-    log.info(`Iniciando criação da atividade ${name}`);
+    log.info(`Iniciando criação do passo ${name}`);
 
-    if (!name) {
+    if (!name || !description || !number) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: 'O campo nome precisa ser preenchidos' });
+        .json({ error: 'Os campo nome, descrição e sequência precisa ser preenchidos' });
     }
 
-    if (!categoryId) {
+    if (number < 0) {
+      return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: 'O campo sequência precisa ser maior ou igual a zero.' });
+    }
+
+    if (!activityId) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-        error: 'A atividade precisa estar associada a alguma categoria',
+        error: 'O passo precisa estar associado a alguma atividade',
       });
     }
 
-    const category = await categoryService.getJustCategory(categoryId);
+    const activity = await activityService.getJustActivity(activityId);
 
-    if (!category) {
+    if (!activity) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: 'Categoria não encontrada' });
+        .json({ error: 'Atividade não encontrada' });
     }
 
     log.info(
-      'Validando se uma atividade de mesmo nome, para a mesma categoria, já existe',
+      'Validando se uma atividade de mesma sequência, para a mesma atividade, já existe',
     );
-    const existedActivity = await service.getByNameAndCategory(
-      name,
-      categoryId,
+    const existedStep = await service.getByNumberAndActivity(
+      number,
+      activityId,
     );
 
-    if (existedActivity) {
+    if (existedStep) {
       return res.status(StatusCodes.CONFLICT).json({
-        error: 'Uma atividade de mesmo nome já existe nessa categoria',
+        error: 'Um passo com o mesmo número de sequência já existe para essa atividade',
       });
     }
 
-    log.info('Criando atividade');
+    log.info('Criando passo');
     const result = await service.create(req.body);
 
-    log.info('Finalizando criação da atividade');
+    log.info('Finalizando criação do passo');
     return res.status(StatusCodes.CREATED).json(result);
   } catch (error) {
     const errorMsg = 'Erro ao criar atividade';
