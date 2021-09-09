@@ -16,19 +16,15 @@ const create = async (req, res) => {
     log.info(`Iniciando criação do passo ${name}`);
 
     if (!name || !description || !number) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({
-          error: 'Os campo nome, descrição e sequência precisa ser preenchidos',
-        });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Os campo nome, descrição e sequência precisa ser preenchidos',
+      });
     }
 
     if (number < 0) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({
-          error: 'O campo sequência precisa ser maior ou igual a zero.',
-        });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'O campo sequência precisa ser maior ou igual a zero.',
+      });
     }
 
     if (!activityId) {
@@ -181,11 +177,9 @@ const edit = async (req, res) => {
     log.info(`Iniciando atualização do passo de id ${id}`);
 
     if (number && number < 0) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({
-          error: 'O campo sequência precisa ser maior ou igual a zero.',
-        });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'O campo sequência precisa ser maior ou igual a zero.',
+      });
     }
 
     const step = await service.getJustStep(id);
@@ -233,7 +227,7 @@ const edit = async (req, res) => {
     log.info('Finalizando atualização do passo');
     return res.status(StatusCodes.CREATED).json(result);
   } catch (error) {
-    const errorMsg = 'Erro ao atualizar atividade';
+    const errorMsg = 'Erro ao atualizar passo';
 
     log.error(errorMsg, 'app/controllers/step.controller.js', error.message);
 
@@ -247,24 +241,24 @@ const remove = async (req, res) => {
   try {
     const { id } = req.params;
 
-    log.info(`Iniciando remoção da atividade de id ${id}`);
-    log.info('Verificando se a atividade existe');
+    log.info(`Iniciando remoção do passo de id ${id}`);
+    log.info('Verificando se o passo existe');
 
-    const activity = await service.getJustActivity(id);
+    const step = await service.getJustStep(id);
 
-    if (!activity) {
+    if (!step) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: 'Atividade não encontrada' });
+        .json({ error: 'Passo não encontrado' });
     }
 
-    log.info('Removendo atividade');
-    await service.remove(activity);
+    log.info('Removendo passo');
+    await service.remove(step);
 
     log.info('Finalizando remoção');
-    return res.status(StatusCodes.OK).json('Atividade removida com sucesso.');
+    return res.status(StatusCodes.OK).json('Passo removido com sucesso.');
   } catch (error) {
-    const errorMsg = 'Erro ao remover atividade';
+    const errorMsg = 'Erro ao remover passo';
 
     log.error(errorMsg, 'app/controllers/step.controller.js', error.message);
 

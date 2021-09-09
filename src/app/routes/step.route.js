@@ -1,7 +1,7 @@
 const express = require('express');
 const controller = require('../controllers/step.controller');
 const { verifyAuthorization } = require('../middlewares/auth');
-const multer = require('../../multer')
+const multer = require('../../multer');
 
 const {
   CREATE_ACTIVITY_PERMISSION,
@@ -23,7 +23,7 @@ router.put(
   verifyAuthorization(WHO_USER, CREATE_ACTIVITY_PERMISSION),
   multer.single('file'),
   controller.addImage,
-)
+);
 router.put(
   '/:id',
   verifyAuthorization(WHO_USER, CREATE_ACTIVITY_PERMISSION),
