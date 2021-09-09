@@ -1,5 +1,5 @@
 const express = require('express');
-const controller = require('../controllers/category.controller');
+const controller = require('../controllers/activity.controller');
 const { verifyAuthorization } = require('../middlewares/auth');
 const {
   CREATE_ACTIVITY_PERMISSION,

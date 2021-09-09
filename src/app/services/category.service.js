@@ -1,8 +1,15 @@
+const { Op } = require('sequelize');
 const { Category, Activity } = require('../models');
 
 const create = (data) => Category.create(data);
 
-const getByName = (name) => Category.findOne({ where: { name } });
+const getByName = (name) => Category.findOne({
+  where: {
+    name: {
+      [Op.iLike]: name,
+    },
+  },
+});
 
 const getById = (id) => Category.findByPk(id, {
   include: {
