@@ -1,4 +1,4 @@
-const { Activity, Step } = require('../models');
+const { Category, Activity, Step, Image } = require('../models');
 
 const create = (data) => Step.create(data);
 
@@ -9,11 +9,22 @@ const getByNumberAndActivity = (number, activityId) => Step.findOne({
   },
 });
 
-const getById = (id) => Activity.findByPk(id, {
-  include: {
-    model: Step,
-    as: 'steps',
-  },
+const getById = (id) => Step.findByPk(id, {
+  include: [
+    {
+      model: Image,
+      as: 'image',
+      separete: true
+    },
+    {
+      model: Activity,
+      as: 'activity',
+      include: {
+        model: Category,
+        as: 'category'
+      }
+    },
+  ]
 });
 
 const getJustStep = (id) => Step.findByPk(id);

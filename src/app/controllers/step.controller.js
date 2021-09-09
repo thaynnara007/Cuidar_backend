@@ -73,20 +73,20 @@ const getById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    log.info(`Iniciando busca pela atividade de id ${id}`);
+    log.info(`Iniciando busca pela passo de id ${id}`);
 
     const result = await service.getById(id);
 
     if (!result) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: 'Atividade não encontrada' });
+        .json({ error: 'Passo não encontrado' });
     }
 
-    log.info('Finalizando busca pela atividade.');
+    log.info('Finalizando busca pelo passo.');
     return res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    const errorMsg = 'Erro ao buscar atividade por id';
+    const errorMsg = 'Erro ao buscar passo por id';
 
     log.error(errorMsg, 'app/controllers/step.controller.js', error.message);
 
