@@ -21,11 +21,14 @@ const getById = (id) => Activity.findByPk(id, {
 
 const getJustActivity = (id) => Activity.findByPk(id);
 
-const getAll = async (query) => {
+const getAll = async (query, categoryId) => {
   const page = parseInt(query.page, 10);
   const pageSize = parseInt(query.pageSize, 10);
   let offset = null;
   let activities = null;
+  const where = {
+    categoryId,
+  };
 
   if (page && pageSize) offset = (page - 1) * pageSize;
 
@@ -34,12 +37,13 @@ const getAll = async (query) => {
       limit: pageSize,
       offset,
       distinct: true,
+      where,
     };
     activities = await Activity.findAndCountAll(options);
 
     activities.pages = Math.ceil(activities.count / pageSize);
   } else {
-    activities = await Activity.findAll();
+    activities = await Activity.findAll({ where });
   }
 
   return activities;
