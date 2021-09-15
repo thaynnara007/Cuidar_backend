@@ -68,10 +68,11 @@ const create = async (req, res) => {
 const getById = async (req, res) => {
   try {
     const { id } = req.params;
+    const { includeSteps } = req.query;
 
     log.info(`Iniciando busca pela atividade de id ${id}`);
 
-    const result = await service.getById(id);
+    const result = await service.getById(id, includeSteps);
 
     if (!result) {
       return res

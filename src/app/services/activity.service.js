@@ -12,18 +12,25 @@ const getByNameAndCategory = (name, categoryId) => Activity.findOne({
   },
 });
 
-const getById = (id) => Activity.findByPk(id, {
-  include: [
+const getById = (id, includeSteps = true) => {
+  const include = [
     {
       model: Category,
       as: 'category',
     },
-    {
+  ];
+
+  if (includeSteps !== 'false') {
+    include.push({
       model: Step,
       as: 'steps',
-    },
-  ],
-});
+    });
+  }
+
+  return Activity.findByPk(id, {
+    include,
+  });
+};
 
 const getJustActivity = (id) => Activity.findByPk(id);
 
