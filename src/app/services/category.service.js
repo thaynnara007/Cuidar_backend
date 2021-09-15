@@ -11,12 +11,22 @@ const getByName = (name) => Category.findOne({
   },
 });
 
-const getById = (id) => Category.findByPk(id, {
-  include: {
-    model: Activity,
-    as: 'activities',
-  },
-});
+const getById = async (id, includeActivities = true) => {
+  let result = null;
+
+  if (includeActivities !== 'false') {
+    result = await Category.findByPk(id, {
+      include: {
+        model: Activity,
+        as: 'activities',
+      },
+    });
+  } else {
+    result = await Category.findByPk(id);
+  }
+
+  return result;
+};
 
 const getJustCategory = (id) => Category.findByPk(id);
 

@@ -9,7 +9,7 @@ const categories = [
     pageDescription: 'Aqui você pode escolher qual o alimento será utilizado!',
     icon: 'PLATE',
     color: '#FFDF01',
-    textColor: '##24267E',
+    textColor: '#24267E',
     createdAt: new Date(),
     updatedAt: new Date(),
   },

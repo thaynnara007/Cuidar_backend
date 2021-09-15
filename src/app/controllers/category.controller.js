@@ -48,10 +48,11 @@ const create = async (req, res) => {
 const getById = async (req, res) => {
   try {
     const { id } = req.params;
+    const { includeActivities } = req.query;
 
     log.info(`Iniciando busca pela categoria de id ${id}`);
 
-    const result = await service.getById(id);
+    const result = await service.getById(id, includeActivities);
 
     if (!result) {
       return res
