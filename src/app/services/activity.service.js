@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { Activity, Step } = require('../models');
+const { Category, Activity, Step } = require('../models');
 
 const create = (data) => Activity.create(data);
 
@@ -13,10 +13,16 @@ const getByNameAndCategory = (name, categoryId) => Activity.findOne({
 });
 
 const getById = (id) => Activity.findByPk(id, {
-  include: {
-    model: Step,
-    as: 'steps',
-  },
+  include: [
+    {
+      model: Category,
+      as: 'category',
+    },
+    {
+      model: Step,
+      as: 'steps',
+    },
+  ],
 });
 
 const getJustActivity = (id) => Activity.findByPk(id);
