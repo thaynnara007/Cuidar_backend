@@ -252,6 +252,12 @@ const remove = async (req, res) => {
         .json({ error: 'Passo não encontrado' });
     }
 
+    log.info('Buscando imagem');
+    const image = await imageService.getByStepId(step.id);
+
+    log.info('Apagando imagem do firebase');
+    firebaseService.delet(image.imageName);
+
     log.info('Removendo passo');
     await service.remove(step);
 
