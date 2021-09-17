@@ -1,5 +1,7 @@
 const { Op } = require('sequelize');
-const { Activity, Step } = require('../models');
+const {
+  Category, Activity, Step, Image,
+} = require('../models');
 
 const create = (data) => Activity.create(data);
 
@@ -12,20 +14,47 @@ const getByNameAndCategory = (name, categoryId) => Activity.findOne({
   },
 });
 
-const getById = (id) => Activity.findByPk(id, {
-  include: {
-    model: Step,
-    as: 'steps',
-  },
-});
+const getById = (id, includeSteps = true, includeImages = false) => {
+  const include = [
+    {
+      model: Category,
+      as: 'category',
+    },
+  ];
+
+  if (includeSteps !== 'false') {
+    if (includeImages === 'true') {
+      include.push({
+        model: Step,
+        as: 'steps',
+        include: {
+          model: Image,
+          as: 'image',
+        },
+      });
+    } else {
+      include.push({
+        model: Step,
+        as: 'steps',
+      });
+    }
+  }
+
+  return Activity.findByPk(id, {
+    include,
+  });
+};
 
 const getJustActivity = (id) => Activity.findByPk(id);
 
-const getAll = async (query) => {
+const getAll = async (query, categoryId) => {
   const page = parseInt(query.page, 10);
   const pageSize = parseInt(query.pageSize, 10);
   let offset = null;
   let activities = null;
+  const where = {
+    categoryId,
+  };
 
   if (page && pageSize) offset = (page - 1) * pageSize;
 
@@ -34,12 +63,13 @@ const getAll = async (query) => {
       limit: pageSize,
       offset,
       distinct: true,
+      where,
     };
     activities = await Activity.findAndCountAll(options);
 
     activities.pages = Math.ceil(activities.count / pageSize);
   } else {
-    activities = await Activity.findAll();
+    activities = await Activity.findAll({ where });
   }
 
   return activities;

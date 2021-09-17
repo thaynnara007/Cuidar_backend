@@ -68,10 +68,11 @@ const create = async (req, res) => {
 const getById = async (req, res) => {
   try {
     const { id } = req.params;
+    const { includeSteps, includeImages } = req.query;
 
     log.info(`Iniciando busca pela atividade de id ${id}`);
 
-    const result = await service.getById(id);
+    const result = await service.getById(id, includeSteps, includeImages);
 
     if (!result) {
       return res
@@ -98,11 +99,24 @@ const getById = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
+    const { categoryId } = req.params;
+
     log.info('Iniciando busca pelas atividades');
-    const result = await service.getAll(req.query);
+    log.info('Validando se categoria existe');
+
+    const category = await categoryService.getJustCategory(categoryId);
+
+    if (!category) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: 'Categoria não encontrada' });
+    }
+
+    log.info('Buscando pelas atividades');
+    const result = await service.getAll(req.query, categoryId);
 
     log.info('Finalizando busca pelas atividades');
-    return res.status(StatusCodes.OK).json(result);
+    return res.status(StatusCodes.OK).json({ category, ...result });
   } catch (error) {
     const errorMsg = 'Erro ao buscar atividades';
 

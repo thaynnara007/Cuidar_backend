@@ -14,7 +14,7 @@ router.post(
   verifyAuthorization(WHO_USER, CREATE_ACTIVITY_PERMISSION),
   controller.create,
 );
-router.get('/', verifyAuthorization(), controller.getAll);
+router.get('/category/:categoryId', verifyAuthorization(), controller.getAll);
 router.get('/:id', verifyAuthorization(), controller.getById);
 router.put(
   '/:id',

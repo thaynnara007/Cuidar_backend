@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       pageDescription: DataTypes.TEXT,
       icon: DataTypes.STRING,
       color: DataTypes.STRING,
+      textColor: DataTypes.STRING,
     },
     {},
   );

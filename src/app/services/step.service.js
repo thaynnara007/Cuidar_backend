@@ -21,10 +21,17 @@ const getById = (id) => Step.findByPk(id, {
     {
       model: Activity,
       as: 'activity',
-      include: {
-        model: Category,
-        as: 'category',
-      },
+      include: [
+        {
+          model: Category,
+          as: 'category',
+        },
+        {
+          model: Step,
+          as: 'steps',
+          separete: true,
+        },
+      ],
     },
   ],
 });
