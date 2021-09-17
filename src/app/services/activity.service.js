@@ -1,5 +1,7 @@
 const { Op } = require('sequelize');
-const { Category, Activity, Step } = require('../models');
+const {
+  Category, Activity, Step, Image,
+} = require('../models');
 
 const create = (data) => Activity.create(data);
 
@@ -12,7 +14,7 @@ const getByNameAndCategory = (name, categoryId) => Activity.findOne({
   },
 });
 
-const getById = (id, includeSteps = true) => {
+const getById = (id, includeSteps = true, includeImages = false) => {
   const include = [
     {
       model: Category,
@@ -21,10 +23,21 @@ const getById = (id, includeSteps = true) => {
   ];
 
   if (includeSteps !== 'false') {
-    include.push({
-      model: Step,
-      as: 'steps',
-    });
+    if (includeImages === 'true') {
+      include.push({
+        model: Step,
+        as: 'steps',
+        include: {
+          model: Image,
+          as: 'image',
+        },
+      });
+    } else {
+      include.push({
+        model: Step,
+        as: 'steps',
+      });
+    }
   }
 
   return Activity.findByPk(id, {
