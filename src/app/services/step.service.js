@@ -46,6 +46,17 @@ const getAll = async (query, activityId) => {
   const where = {
     activityId,
   };
+  let include = []
+
+  if (query.includeImages === 'true'){
+    include.push(
+      {
+        model: Image,
+        as: 'image',
+        separete: true,
+      }
+    )
+  }
 
   if (page && pageSize) offset = (page - 1) * pageSize;
 
@@ -55,12 +66,13 @@ const getAll = async (query, activityId) => {
       offset,
       distinct: true,
       where,
+      include,
     };
     steps = await Step.findAndCountAll(options);
 
     steps.pages = Math.ceil(steps.count / pageSize);
   } else {
-    steps = await Step.findAll({ where });
+    steps = await Step.findAll({ where, include });
   }
 
   return steps;
