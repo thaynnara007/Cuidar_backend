@@ -138,7 +138,7 @@ const images = [
   },
   {
     imageName: 'body_step3.png',
-    token: ' 939e784b-cba4-4881-a77c-0f948281ce6d',
+    token: '939e784b-cba4-4881-a77c-0f948281ce6d',
     stepId: 20,
     createdAt: new Date(),
     updatedAt: new Date(),
