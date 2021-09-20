@@ -54,6 +54,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'patientId',
       as: 'address',
     });
+    Patient.belongsToMany(models.Activity, {
+      through: 'Histories',
+      as: 'activities',
+      foreignKey: 'patientId',
+    });
   };
 
   Patient.addHook('beforeSave', async (patient) => {
