@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
       as: 'steps',
       onDelete: 'CASCADE',
     });
+    Activity.belongsToMany(models.Patient, {
+      through: 'Histories',
+      as: 'patients',
+      foreignKey: 'activityId',
+    });
   };
   return Activity;
 };

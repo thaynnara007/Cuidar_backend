@@ -7,6 +7,7 @@ const patient = require('./app/routes/patient.route');
 const category = require('./app/routes/category.route');
 const activity = require('./app/routes/activity.route');
 const step = require('./app/routes/step.route');
+const history = require('./app/routes/history.route');
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.use('/patient', patient);
 router.use('/category', category);
 router.use('/activity', activity);
 router.use('/step', step);
+router.use('/history', history);
 
 module.exports = router;
