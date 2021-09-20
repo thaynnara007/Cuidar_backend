@@ -1,6 +1,6 @@
 const express = require('express');
 const controller = require('../controllers/history.controller');
-const { verifyAuthorization } = require('../middlewares/auth');
+const { verifyAuthorization, verifyHistoryAuth } = require('../middlewares/auth');
 const {
   WHO_PATIENT,
 } = require('../util/constants');
@@ -8,6 +8,6 @@ const {
 const router = express.Router();
 
 router.post('/', verifyAuthorization(WHO_PATIENT), controller.create)
-router.get('/patient/:patientId/activity/:activityId', controller.getAll)
+router.get('/patient/:patientId/activity/:activityId', verifyHistoryAuth, controller.getAll)
 
 module.exports = router

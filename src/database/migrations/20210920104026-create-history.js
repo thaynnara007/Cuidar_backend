@@ -6,6 +6,10 @@ module.exports = {
       primaryKey: true,
       type: Sequelize.INTEGER,
     },
+    endTime: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
     patientId: {
       type: Sequelize.INTEGER,
       allowNull: false,

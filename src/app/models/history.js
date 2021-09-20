@@ -1,5 +1,7 @@
-module.exports = (sequelize) => {
-  const History = sequelize.define('History', {}, {});
+module.exports = (sequelize, DataTypes) => {
+  const History = sequelize.define('History', {
+    endTime: DataTypes.DATE
+  }, {});
   History.associate = (models) => {
     History.belongsTo(models.Patient, {
       foreignKey: 'patientId',

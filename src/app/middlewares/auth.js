@@ -3,7 +3,7 @@ const httpStatus = require('http-status-codes');
 const userService = require('../services/user.service');
 const patientService = require('../services/patient.service');
 const config = require('../../config/environment');
-const { WHO_PATIENT, WHO_USER } = require('../util/constants');
+const { WHO_PATIENT, WHO_USER, GET_PATIENT_PERMISSION } = require('../util/constants');
 
 const { StatusCodes } = httpStatus;
 
@@ -67,6 +67,53 @@ const verifyAuthorization = (expectUser, permission) => async (req, res, next) =
   }
 };
 
+const verifyHistoryAuth = async (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
+
+    if (!authorization) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ error: 'Acesso negado. Token não fornecido' });
+    }
+
+    const [type, token] = authorization.split(' ');
+
+    if (!type || !token || type !== 'Bearer') {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ error: 'Acesso negado. Token Inválido.' });
+    }
+
+    const { id, from, permissions } = jwt.verify(token, config.JWT.secret);
+
+    if (from === WHO_USER) {
+      if (!permissions?.includes(GET_PATIENT_PERMISSION)) {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          error: 'Seu usuário não tem permissão para executar essa operação.',
+        });
+      }
+    }
+    else if (from === WHO_PATIENT) {
+      if (`${req.params.patientId}` !== `${id}`) {
+        return res.status(StatusCodes.FORBIDDEN).json({
+          error: 'Você tem permissão para executar essa operação.',
+        });
+      }
+    } 
+
+    return next();
+  } catch (error) {
+    const errorMsg = 'Token expirado';
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `${errorMsg}, ${error.message}` });
+  }
+};
+
+
 module.exports = {
   verifyAuthorization,
+  verifyHistoryAuth,
 };
