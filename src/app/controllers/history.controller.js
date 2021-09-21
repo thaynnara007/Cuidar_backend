@@ -55,50 +55,37 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const { date, timeSkip } = req.query;
+    const { start, end } = req.query;
 
     log.info('Iniciando busca no histórico');
     log.info('Validando entradas');
 
-    if (timeSkip !== 'day' && timeSkip !== 'week' && timeSkip !== 'month') {
+    if (!start || !end) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-        error:
-          'O parâmetro timeSkip precisa ser um dos valores: day, week ou month',
+        error: 'A data inicial e final deve ser informadas',
       });
     }
 
-    const day = new Date(date);
+    const day = new Date(start);
+    const day2 = new Date(end);
 
     if (Number.isNaN(day.getTime())) {
       res.status(StatusCodes.BAD_REQUEST).json({
-        error: 'Formato de data inválida no parâmetro date',
+        error: 'Formato de data inválida no parâmetro start',
       });
     }
 
-    log.info('Definindo datas para o intervalo de busca');
-
-    let date1 = null;
-    let date2 = null;
-
-    if (timeSkip === 'day') {
-      date1 = new Date(date);
-      date2 = new Date(date);
-    } else if (timeSkip === 'week') {
-      const firstDayWeek = day.getDate() - day.getDay();
-      const lastDayWeek = firstDayWeek + 6;
-
-      date1 = new Date(day.setDate(firstDayWeek));
-      date2 = new Date(day.setDate(lastDayWeek));
-    } else {
-      date1 = new Date(day.setDate(1));
-      date2 = new Date(day.getFullYear(), day.getMonth() + 1, 0);
+    if (Number.isNaN(day2.getTime())) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Formato de data inválida no parâmetro end',
+      });
     }
 
-    date1.setUTCHours(0, 0, 0);
-    date2.setUTCHours(23, 59, 59);
+    day.setUTCHours(0, 0, 0);
+    day2.setUTCHours(23, 59, 59);
 
-    log.info(`Buscando no histórico. data1 = ${date1} e data2 = ${date2}`);
-    const result = await service.getAll(req.params, date1, date2);
+    log.info(`Buscando no histórico. data1 = ${day} e data2 = ${day2}`);
+    const result = await service.getAll(req.params, day, day2);
 
     log.info('Finalizando busca');
     return res.status(StatusCodes.OK).json(result);
