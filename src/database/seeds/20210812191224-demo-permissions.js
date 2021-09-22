@@ -6,21 +6,20 @@ const permissions = [
   {
     name: 'criar atividade',
     description:
-      'Permite que o usuário registre novas atividades e categorias e edite as já existentes.',
+      'Permite que o usuário registre novas categorias, atividades, etaps e edite as já existentes.',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
     name: 'criar usuário',
     description:
-      'Permite que o usuário registre novos usuários e edite os já existentes',
+      'Permite que o usuário registre novos usuários e edite as permissões dos já existentes',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
     name: 'criar paciente',
-    description:
-      'Permite que o usuário cadastre novos pacientes e edite as informações dos já cadastrados',
+    description: 'Permite que o usuário cadastre novos pacientes.',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -33,7 +32,7 @@ const permissions = [
   {
     name: 'ler paciente',
     description:
-      'Permite que o usuário veja os dados dos pacientes cadastrados',
+      'Permite que o usuário veja os dados dos pacientes cadastrados, incluindo o histórico dos pacientes',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -52,7 +51,7 @@ const permissions = [
   {
     name: 'remover atividade',
     description:
-      'Permite que o usuário delete alguma atividade ou categoria cadastrada.',
+      'Permite que o usuário delete alguma atividade, etapa ou categoria cadastrada.',
     createdAt: new Date(),
     updatedAt: new Date(),
   },

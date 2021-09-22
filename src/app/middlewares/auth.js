@@ -3,7 +3,11 @@ const httpStatus = require('http-status-codes');
 const userService = require('../services/user.service');
 const patientService = require('../services/patient.service');
 const config = require('../../config/environment');
-const { WHO_PATIENT, WHO_USER, GET_PATIENT_PERMISSION } = require('../util/constants');
+const {
+  WHO_PATIENT,
+  WHO_USER,
+  GET_PATIENT_PERMISSION,
+} = require('../util/constants');
 
 const { StatusCodes } = httpStatus;
 
@@ -93,14 +97,13 @@ const verifyHistoryAuth = async (req, res, next) => {
           error: 'Seu usuário não tem permissão para executar essa operação.',
         });
       }
-    }
-    else if (from === WHO_PATIENT) {
+    } else if (from === WHO_PATIENT) {
       if (`${req.params.patientId}` !== `${id}`) {
         return res.status(StatusCodes.FORBIDDEN).json({
           error: 'Você tem permissão para executar essa operação.',
         });
       }
-    } 
+    }
 
     return next();
   } catch (error) {
@@ -111,7 +114,6 @@ const verifyHistoryAuth = async (req, res, next) => {
       .json({ error: `${errorMsg}, ${error.message}` });
   }
 };
-
 
 module.exports = {
   verifyAuthorization,

@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const { Op } = require('sequelize');
 const {
   User, Permission, UserPermission, Address,
 } = require('../models');
@@ -32,6 +33,7 @@ const getAll = async (query) => {
   const pageSize = parseInt(query.pageSize, 10);
   let offset = null;
   let users = null;
+  const { search } = query;
   const include = [
     {
       model: Address,
@@ -43,6 +45,35 @@ const getAll = async (query) => {
     },
   ];
 
+  let where = {};
+
+  if (search) {
+    where = {
+      [Op.or]: [
+        {
+          name: {
+            [Op.iRegexp]: `${search}`,
+          },
+        },
+        {
+          lastName: {
+            [Op.iRegexp]: `${search}`,
+          },
+        },
+        {
+          phoneNumber: {
+            [Op.iRegexp]: `${search}`,
+          },
+        },
+        {
+          email: {
+            [Op.iRegexp]: `${search}`,
+          },
+        },
+      ],
+    };
+  }
+
   if (page && pageSize) offset = (page - 1) * pageSize;
 
   if (offset !== null) {
@@ -50,13 +81,14 @@ const getAll = async (query) => {
       limit: pageSize,
       offset,
       distinct: true,
+      where,
       include,
     };
     users = await User.findAndCountAll(options);
 
     users.pages = Math.ceil(users.count / pageSize);
   } else {
-    users = await User.findAll({ include });
+    users = await User.findAll({ where, include });
   }
 
   return users;

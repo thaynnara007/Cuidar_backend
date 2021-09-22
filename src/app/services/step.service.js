@@ -46,16 +46,14 @@ const getAll = async (query, activityId) => {
   const where = {
     activityId,
   };
-  let include = []
+  const include = [];
 
-  if (query.includeImages === 'true'){
-    include.push(
-      {
-        model: Image,
-        as: 'image',
-        separete: true,
-      }
-    )
+  if (query.includeImages === 'true') {
+    include.push({
+      model: Image,
+      as: 'image',
+      separete: true,
+    });
   }
 
   if (page && pageSize) offset = (page - 1) * pageSize;
