@@ -115,7 +115,32 @@ const verifyHistoryAuth = async (req, res, next) => {
   }
 };
 
+const isValidToken = (req, res) => {
+  try {
+    const { authorization } = req.headers;
+
+    if (!authorization) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ valid: false });
+    }
+
+    const [type, token] = authorization.split(' ');
+
+    if (!type || !token || type !== 'Bearer') {
+      return res.status(StatusCodes.UNAUTHORIZED).json({ valid: false });
+    }
+
+    const result = jwt.verify(token, config.JWT.secret);
+
+    if (!result) return res.status(StatusCodes.UNAUTHORIZED).json({ valid: false });
+
+    return res.status(StatusCodes.OK).json({ valid: true });
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ valid: false });
+  }
+};
+
 module.exports = {
   verifyAuthorization,
   verifyHistoryAuth,
+  isValidToken,
 };
