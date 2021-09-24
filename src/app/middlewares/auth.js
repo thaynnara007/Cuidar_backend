@@ -100,10 +100,14 @@ const verifyHistoryAuth = async (req, res, next) => {
     } else if (from === WHO_PATIENT) {
       if (`${req.params.patientId}` !== `${id}`) {
         return res.status(StatusCodes.FORBIDDEN).json({
-          error: 'Você tem permissão para executar essa operação.',
+          error: 'Você não tem permissão para executar essa operação.',
         });
       }
     }
+
+    req.logged = {
+      who: from,
+    };
 
     return next();
   } catch (error) {
