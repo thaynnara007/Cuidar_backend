@@ -22,14 +22,14 @@ module.exports = {
   },
   test: {},
   production: {
-    database_url: process.env.DATABASE_URL,
-    database: process.env.DB_NAME,
     dialect: 'postgres',
+    protocol: 'postgres',
     dialectOptions: {
       ssl: {
         required: true,
         rejectUnauthorized: false,
       },
     },
+    use_env_variable: 'DATABASE_URL',
   },
 };
