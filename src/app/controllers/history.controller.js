@@ -2,7 +2,7 @@ const httpStatus = require('http-status-codes');
 const log = require('../services/log.service');
 const service = require('../services/history.service');
 const activityService = require('../services/activity.service');
-const  { WHO_PATIENT } = require('../util/constants')
+const { WHO_PATIENT } = require('../util/constants');
 
 const { StatusCodes } = httpStatus;
 
@@ -30,7 +30,6 @@ const create = async (req, res) => {
     }
 
     const now = new Date();
-    now.setHours(now.getHours() - 3);
 
     const body = {
       patientId,
@@ -57,7 +56,7 @@ const create = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const { start, end } = req.query;
-    const { who } = req.logged
+    const { who } = req.logged;
 
     log.info('Iniciando busca no histórico');
     log.info('Validando entradas');
@@ -89,8 +88,7 @@ const getAll = async (req, res) => {
     log.info(`Buscando no histórico. data1 = ${day} e data2 = ${day2}`);
     let result = await service.getAll(req.params, day, day2);
 
-    if (who === WHO_PATIENT)
-      result = service.mapData(result)
+    if (who === WHO_PATIENT) result = service.mapData(result);
 
     log.info('Finalizando busca');
     return res.status(StatusCodes.OK).json(result);
