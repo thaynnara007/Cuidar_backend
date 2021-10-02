@@ -129,12 +129,28 @@ const getByMe = async (req, res) => {
 
     log.info(`Iniciando busca por paciente logado. patientId = ${id}`);
 
-    const patient = await service.getById(id);
+    let patient = await service.getById(id);
 
     if (!patient) {
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ error: 'Paciente não encontrado' });
+    }
+
+    const { birthday } = patient
+
+    if (birthday) {
+      const date = birthday.toISOString().split("T")[0].split("-")
+      const year = 0
+      const month = 1
+      const day = 2
+
+      const formattedDate = `${date[year]}-${date[day]}-${date[month]}T`
+
+      patient.dataValues = {
+        ...patient.dataValues,
+        birthday: formattedDate 
+      }
     }
 
     log.info('Finalizando busca por paciente logado.');
@@ -176,11 +192,12 @@ const edit = async (req, res) => {
     const { id, cpf } = req.logged.loggedAccount;
     const { address } = req.body;
     let { patient } = req.body;
-
+    
     log.info(`Iniciando atualização do paciente. patientId = ${id}`);
     log.info('Normalizando dados.');
-
+    
     patient.cpf = cpf;
+    patient.id = id;
 
     if (patient.birthday) {
       const birthday = new Date(patient.birthday);
